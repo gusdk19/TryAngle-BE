@@ -17,11 +17,11 @@ public class Follow {
     private Integer followId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "follower_id", nullable = false)
+    @JoinColumn(name = "follower_id", nullable = false)
     private User follower;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "followee_id", nullable = false)
+    @JoinColumn(name = "followee_id", nullable = false)
     private User followee;
 
     public Follow(User follower, User followee) {
