@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "user")
 @Getter
@@ -33,11 +36,14 @@ public class User {
     @Column(nullable = false, length = 50, unique = true)
     private String nickname;
 
-    @Column(name = "profile_image", length = 200)
+    @Column(name = "profile_image", length = 300)
     private String profileImage;
 
     @Column(nullable = false)
     private Integer deposit = 0;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserBadge> userBadges = new ArrayList<>();
 
     public User(String email, String password, String name, String phone,
                 String description, String nickname, String profileImage, Integer deposit) {
