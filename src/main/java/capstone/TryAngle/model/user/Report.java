@@ -1,4 +1,4 @@
-package capstone.TryAngle.model;
+package capstone.TryAngle.model.user;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -35,4 +35,9 @@ public class Report {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime reportCreatedAt;
 
+    public Report(User reporter, User target, String reportReason) {
+        this.reporter = reporter;
+        this.target = target;
+        this.reportReason = reportReason;
+    }
 }
