@@ -1,4 +1,4 @@
-package capstone.TryAngle.model;
+package capstone.TryAngle.model.user;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -35,4 +35,10 @@ public class UserBadge {
     @CreatedDate
     @Column(name = "created_at", nullable = false)
     private LocalDateTime UserBadgeCreatedAt;
+
+    public UserBadge(User user, Badge badge, Boolean isVisible) {
+        this.user = user;
+        this.badge = badge;
+        this.isVisible = isVisible;
+    }
 }

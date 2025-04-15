@@ -1,4 +1,4 @@
-package capstone.TryAngle.model;
+package capstone.TryAngle.model.user;
 
 import jakarta.persistence.*;
 import lombok.Getter;
