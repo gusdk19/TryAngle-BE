@@ -55,5 +55,6 @@ public class User {
         this.nickname = nickname;
         this.profileImage = profileImage;
         this.deposit = deposit;
+        this.userBadges = userBadges;
     }
 }
