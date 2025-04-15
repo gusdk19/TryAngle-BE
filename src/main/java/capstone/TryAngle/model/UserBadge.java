@@ -1,0 +1,38 @@
+package capstone.TryAngle.model;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
+
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "user_badge",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "badge_id"})})
+@Getter
+@NoArgsConstructor
+public class UserBadge {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "badge_id")
+    private Integer badgeId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "badge_id", nullable = false)
+    private Badge badge;
+
+    @Column(name = "is_visible", nullable = false)
+    private Boolean isVisible;
+
+    @CreatedDate
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime UserBadgeCreatedAt;
+}
