@@ -29,7 +29,7 @@ public class Participation {
     private Challenge challenge;
 
     @Column(name="status", nullable = false)
-    private Integer status;
+    private Integer status;  //0: ready, 1: progress, 2: completed
 
     @Column(name = "participation_success", nullable = false)
     private Boolean participation_success;
@@ -38,7 +38,7 @@ public class Participation {
     private Integer deposit_amount;
 
     @Column(name = "deposit_status", nullable = false)
-    private Integer deposit_status;
+    private Integer deposit_status;  // 0: refunded, 1: donated, 2: not refunded yet
 
     @CreatedDate
     @Column(name="created_at", nullable = false)

@@ -33,5 +33,9 @@ public class Authentication {
     @Column(name="created_at", nullable = false)
     private LocalDateTime created_at;
 
-
+    public Authentication(String auth_image, String comment, Boolean auth_success) {
+        this.auth_image = auth_image;
+        this.comment = comment;
+        this.auth_success = auth_success;
+    }
 }

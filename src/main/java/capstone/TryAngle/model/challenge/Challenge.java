@@ -1,5 +1,6 @@
 package capstone.TryAngle.model.challenge;
 
+import capstone.TryAngle.model.user.NotificationType;
 import capstone.TryAngle.model.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,8 +24,8 @@ public class Challenge {
     @Column(name="challenge_id", nullable = false)
     private Integer challenge_id;
 
-    @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category", nullable = false)
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -68,7 +69,7 @@ public class Challenge {
     private Integer min_deposit;
 
     @Column(name="return_type", nullable = false)
-    private Integer return_type;
+    private Boolean return_type;  //상금 : 0, 기부 : 1
 
     @Column(name="auth_frequency", nullable = false, length=50)
     private String auth_frequency;
