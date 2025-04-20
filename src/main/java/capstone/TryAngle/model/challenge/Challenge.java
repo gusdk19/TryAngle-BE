@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,12 +15,21 @@ import java.time.LocalTime;
 @Table(name="challenge")
 @Getter
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 
 public class Challenge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="challenge_id")
+    @Column(name="challenge_id", nullable = false)
     private Integer challenge_id;
+
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "leader_id", nullable = false)
+    private User leader;
 
     @Column(name = "challenge_name", nullable = false, length = 50)
     private String challenge_name;
@@ -71,10 +81,23 @@ public class Challenge {
     private LocalDateTime created_at;
 
 
-
-
-
-
-
-
+    public Challenge(Category category, User leader, String challenge_name, String challenge_thumbnail, String challenge_shortintro, String challenge_description, Boolean challenge_public, LocalDate start_date, LocalDate end_date, LocalTime auth_time_start, LocalTime auth_time_end, Integer max_people, Integer now_people, Integer min_deposit, Integer return_type, String auth_frequency, String invite_code) {
+        this.category = category;
+        this.leader = leader;
+        this.challenge_name = challenge_name;
+        this.challenge_thumbnail = challenge_thumbnail;
+        this.challenge_shortintro = challenge_shortintro;
+        this.challenge_description = challenge_description;
+        this.challenge_public = challenge_public;
+        this.start_date = start_date;
+        this.end_date = end_date;
+        this.auth_time_start = auth_time_start;
+        this.auth_time_end = auth_time_end;
+        this.max_people = max_people;
+        this.now_people = now_people;
+        this.min_deposit = min_deposit;
+        this.return_type = return_type;
+        this.auth_frequency = auth_frequency;
+        this.invite_code = invite_code;
+    }
 }

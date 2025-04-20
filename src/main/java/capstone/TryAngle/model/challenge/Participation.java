@@ -1,0 +1,55 @@
+package capstone.TryAngle.model.challenge;
+
+import capstone.TryAngle.model.user.User;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name="participation")
+@Getter
+@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
+public class Participation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "participation_id", nullable = false)
+    private Integer participation_id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="challenge_id", nullable = false)
+    private Challenge challenge;
+
+    @Column(name="status", nullable = false)
+    private Integer status;
+
+    @Column(name = "participation_success", nullable = false)
+    private Boolean participation_success;
+
+    @Column(name = "deposit_amount", nullable = false)
+    private Integer deposit_amount;
+
+    @Column(name = "deposit_status", nullable = false)
+    private Integer deposit_status;
+
+    @CreatedDate
+    @Column(name="created_at", nullable = false)
+    private LocalDateTime created_at;
+
+    public Participation(User user, Challenge challenge, Integer status, Boolean participation_success, Integer deposit_amount, Integer deposit_status) {
+        this.user = user;
+        this.challenge = challenge;
+        this.status = status;
+        this.participation_success = participation_success;
+        this.deposit_amount = deposit_amount;
+        this.deposit_status = deposit_status;
+    }
+}
