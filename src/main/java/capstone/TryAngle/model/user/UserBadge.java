@@ -18,8 +18,8 @@ public class UserBadge {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "badge_id")
-    private Integer badgeId;
+    @Column(name = "userBadge_id")
+    private Integer userBadge_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
