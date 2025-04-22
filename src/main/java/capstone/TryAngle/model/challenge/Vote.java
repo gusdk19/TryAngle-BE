@@ -20,7 +20,7 @@ public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vote_id", nullable = false)
-    private Integer vote_id;
+    private Integer voteId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="voter_id", nullable = false)
@@ -36,16 +36,16 @@ public class Vote {
     private Reaction reaction;
 
     @Column(name="vote_type", nullable = false)
-    private Boolean vote_type;   // approve, deny
+    private Boolean voteType;   // approve, deny
 
     @CreatedDate
     @Column(name="created_at", nullable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     public Vote(User user, Authentication authentication, Reaction reaction, Boolean vote_type) {
         this.user = user;
         this.authentication = authentication;
         this.reaction = reaction;
-        this.vote_type = vote_type;
+        this.voteType = vote_type;
     }
 }

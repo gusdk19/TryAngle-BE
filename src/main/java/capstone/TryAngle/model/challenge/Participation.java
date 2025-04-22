@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,7 +19,7 @@ public class Participation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "participation_id", nullable = false)
-    private Integer participation_id;
+    private Integer participationId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", nullable = false)
@@ -32,24 +33,28 @@ public class Participation {
     private Integer status;  //0: ready, 1: progress, 2: completed
 
     @Column(name = "participation_success", nullable = false)
-    private Boolean participation_success;
+    private Boolean participationSuccess;
 
     @Column(name = "deposit_amount", nullable = false)
-    private Integer deposit_amount;
+    private Integer depositAmount;
 
     @Column(name = "deposit_status", nullable = false)
-    private Integer deposit_status;  // 0: refunded, 1: donated, 2: not refunded yet
+    private Integer depositStatus;  // 0: refunded, 1: donated, 2: not refunded yet
+
+
+    @Column(name = "deposit_return_date", nullable = true)
+    private LocalDate depositReturnDate;
 
     @CreatedDate
     @Column(name="created_at", nullable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     public Participation(User user, Challenge challenge, Integer status, Boolean participation_success, Integer deposit_amount, Integer deposit_status) {
         this.user = user;
         this.challenge = challenge;
         this.status = status;
-        this.participation_success = participation_success;
-        this.deposit_amount = deposit_amount;
-        this.deposit_status = deposit_status;
+        this.participationSuccess = participation_success;
+        this.depositAmount = deposit_amount;
+        this.depositStatus = deposit_status;
     }
 }

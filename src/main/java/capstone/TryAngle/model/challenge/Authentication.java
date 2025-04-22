@@ -18,24 +18,24 @@ public class Authentication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="authentication_id", nullable = false)
-    private Integer authentication_id;
+    private Integer authenticationId;
 
     @Column(name="auth_image", nullable = false)
-    private String auth_image;
+    private String authImage;
 
     @Column(name="comment", nullable = false)
     private String comment;
 
     @Column(name = "auth_success", nullable = true)
-    private Boolean auth_success;
+    private Boolean authSuccess;
 
     @CreatedDate
     @Column(name="created_at", nullable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
-    public Authentication(String auth_image, String comment, Boolean auth_success) {
-        this.auth_image = auth_image;
+    public Authentication(String authImage, String comment, Boolean authSuccess) {
+        this.authImage = authImage;
         this.comment = comment;
-        this.auth_success = auth_success;
+        this.authSuccess = authSuccess;
     }
 }
