@@ -22,10 +22,11 @@ ErrorStatus implements BaseErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER4001", "사용자를 찾을수 없습니다."),
     INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "AUTH4001", "아이디 또는 비밀번호가 올바르지 않습니다"),
     DUPLICATE_NICKNAME(HttpStatus.UNAUTHORIZED, "USER4009", "이미 사용중인 닉네임입니다."),
-    NO_FOLLOW_INFO(HttpStatus.NOT_FOUND, "USER4008", "팔로우 정보가 존재하지 않습니다")
+    NO_FOLLOW_INFO(HttpStatus.NOT_FOUND, "USER4008", "팔로우 정보가 존재하지 않습니다"),
+
+    // 챌린지 관련 응답
+    CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND, "CHALLENGE$)$", "챌린지 정보가 존재하지 않습니다")
     ;
-
-
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;

@@ -15,9 +15,9 @@ public class ChallengeResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public static class toChallengeDTO {
+    public static class getChallengeDTO {
 
-        private  Integer challenge_id;
+        private Integer challenge_id;
         private String challenge_name;
         private String challenge_thumbnail;
         private String challenge_shortIntro;
