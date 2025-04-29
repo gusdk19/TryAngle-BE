@@ -4,6 +4,7 @@ import capstone.TryAngle.web.dto.ChallengeResponseDTO;
 
 import java.util.List;
 
+
 public interface ChallengeService {
-    List<ChallengeResponseDTO.getChallengeDTO> getChallenges();
+    List<ChallengeResponseDTO.toChallengeDTO> getChallenges();
 }
