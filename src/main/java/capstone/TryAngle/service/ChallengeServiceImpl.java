@@ -33,6 +33,11 @@ public class ChallengeServiceImpl implements ChallengeService {
                     .orElseThrow(() -> new GeneralException(ErrorStatus.CHALLENGE_NOT_FOUND));
             return ChallengeConverter.toChallengeDTO(challenge);
         }
+
+    @Override
+    public List<ChallengeResponseDTO.getChallengeDTO> getMyChallenges(String userid) {
+        return null;
     }
+}
 
 

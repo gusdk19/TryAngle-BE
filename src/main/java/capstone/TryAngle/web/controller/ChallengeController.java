@@ -23,6 +23,12 @@ public class ChallengeController {
 
     }
 
+    @GetMapping("my")
+    public ApiResponse<?> getMyChallenges( @RequestHeader(value = "Authorization", required = true) String authorizationHeader){
+        String userid = authorizationHeader.replace("Bearer ", "");
+        return ApiResponse.onSuccess(challengeService.getMyChallenges(userid));
+    }
+
 
 
 
