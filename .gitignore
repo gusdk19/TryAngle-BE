@@ -1,26 +1,29 @@
-# Default ignored files
+# IntelliJ IDEA
+.idea/
+*.iml
 /shelf/
-/.idea/workspace.xml
-# Editor-based HTTP Client requests
 /httpRequests/
-# Datasource local storage ignored files
+workspace.xml
 /dataSources/
 /dataSources.local.xml
 
+# Java class files
+*.class
+
+# Log / temp / cache
+*.log
+*.tmp
+*.out
+
+# Build output
+/build/
+/bin/
+/out/
+/*.bin
 
 # Gradle
 .gradle/
 build/
 
-# Java
-*.class
-*.log
-*.tmp
-*.out
-*.bin
+# HTML (optional: remove if needed)
 *.html
-
-# IDE
-*.iml
-.idea/
-out/
