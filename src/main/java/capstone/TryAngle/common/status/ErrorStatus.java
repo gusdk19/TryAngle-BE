@@ -20,8 +20,8 @@ ErrorStatus implements BaseErrorCode {
     MISSING_REQUIRED_VALUE(HttpStatus.BAD_REQUEST, "COMMON4000", "입력되지 않은 필수값이 있습니다."),
 
     // 사용자 관련 응답
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER4001", "사용자를 찾을수 없습니다."),
-    INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "AUTH4001", "아이디 또는 비밀번호가 올바르지 않습니다"),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER4004", "사용자를 찾을 수 없습니다."),
+    INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "AUTH4001", "비밀번호가 올바르지 않습니다"),
     DUPLICATE_NICKNAME(HttpStatus.CONFLICT, "USER4009", "이미 사용중인 닉네임입니다."),
     NO_FOLLOW_INFO(HttpStatus.NOT_FOUND, "USER4008", "팔로우 정보가 존재하지 않습니다"),
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "USER4009", "이미 사용중인 이메일입니다."),
