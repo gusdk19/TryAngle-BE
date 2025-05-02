@@ -1,7 +1,5 @@
 package capstone.TryAngle.service;
 
-import capstone.TryAngle.common.GeneralException;
-import capstone.TryAngle.common.status.ErrorStatus;
 import capstone.TryAngle.model.user.User;
 import capstone.TryAngle.repository.UserRepository;
 import capstone.TryAngle.web.converter.UserConverter;
@@ -18,10 +16,17 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Override
+    public boolean isEmailAvailable(String email) {
+        return !userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean isNicknameAvailable(String nickname) {
+        return !userRepository.existsByNickname(nickname);
+    }
+
     public void signup(UserRequestDTO.SignupRequestDTO request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new GeneralException(ErrorStatus.DUPLICATE_EMAIL);
-        }
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         User user = UserConverter.toUser(request, encodedPassword);
 

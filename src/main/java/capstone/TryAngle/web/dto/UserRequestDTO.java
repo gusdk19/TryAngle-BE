@@ -21,4 +21,18 @@ public class UserRequestDTO {
         private String description;
         private String profileImage;
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class EmailCheckDTO {
+        private String email;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class NicknameCheckDTO {
+        private String nickname;
+    }
 }

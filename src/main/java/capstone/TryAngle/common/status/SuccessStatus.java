@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 public enum SuccessStatus implements BaseErrorCode {
     // 가장 일반적인 응답
     _OK(HttpStatus.OK, "COMMON200", "요청에 성공했습니다."),
-    SIGNUP_SUCCESS(HttpStatus.OK, "COMMON200", "회원가입에 성공했습니다.");
+    SIGNUP_SUCCESS(HttpStatus.OK, "COMMON200", "회원가입에 성공했습니다."),
+    AVAILABLE_EMAIL(HttpStatus.OK, "COMMON200", "사용 가능한 이메일입니다."),
+    AVAILABLE_NICKNAME(HttpStatus.OK, "COMMON200", "사용 가능한 닉네임입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
@@ -22,7 +24,7 @@ public enum SuccessStatus implements BaseErrorCode {
         return ErrorReasonDTO.builder()
                 .message(message)
                 .code(code)
-                .isSuccess(false)
+                .isSuccess(true)
                 .build();
     }
 
@@ -31,7 +33,7 @@ public enum SuccessStatus implements BaseErrorCode {
         return ErrorReasonDTO.builder()
                 .message(message)
                 .code(code)
-                .isSuccess(false)
+                .isSuccess(true)
                 .httpStatus(httpStatus)
                 .build()
                 ;

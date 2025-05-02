@@ -35,7 +35,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/login", "/user/signup").permitAll()
+                        .requestMatchers("/user/login", "/user/signup", "/user/checkEmail", "/user/checkNickname").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
 
