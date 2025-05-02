@@ -10,7 +10,8 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum SuccessStatus implements BaseErrorCode {
     // 가장 일반적인 응답
-    _OK(HttpStatus.OK, "COMMON200", "요청에 성공했습니다.");
+    _OK(HttpStatus.OK, "COMMON200", "요청에 성공했습니다."),
+    SIGNUP_SUCCESS(HttpStatus.OK, "COMMON200", "회원가입에 성공했습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

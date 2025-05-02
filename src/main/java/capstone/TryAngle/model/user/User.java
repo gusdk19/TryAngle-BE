@@ -1,6 +1,8 @@
 package capstone.TryAngle.model.user;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +13,8 @@ import java.util.List;
 @Table(name = "user")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
     @Id
@@ -39,14 +43,14 @@ public class User {
     @Column(name = "profile_image", length = 300)
     private String profileImage;
 
-    @Column(nullable = false)
-    private Integer deposit = 0;
+    @Column(nullable = true)
+    private Integer returnMoney = 0;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserBadge> userBadges = new ArrayList<>();
 
     public User(String email, String password, String name, String phone,
-                String description, String nickname, String profileImage, Integer deposit) {
+                String description, String nickname, String profileImage, Integer returnMoney) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -54,7 +58,7 @@ public class User {
         this.description = description;
         this.nickname = nickname;
         this.profileImage = profileImage;
-        this.deposit = deposit;
+        this.returnMoney = returnMoney;
         this.userBadges = userBadges;
     }
 }
