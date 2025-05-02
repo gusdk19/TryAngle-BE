@@ -11,7 +11,7 @@ public class UserConverter {
                 .name(dto.getName())
                 .nickname(dto.getNickname())
                 .phone(dto.getPhone())
-                .password(dto.getPassword())
+                .password(encodedPassword)
                 .description(dto.getDescription())
                 .profileImage(dto.getProfileImage())
                 .build();
