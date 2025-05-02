@@ -43,7 +43,8 @@ public class User {
     @Column(name = "profile_image", length = 300)
     private String profileImage;
 
-    @Column(nullable = true)
+    @Column(name = "return_money")
+    @Builder.Default
     private Integer returnMoney = 0;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -59,6 +60,5 @@ public class User {
         this.nickname = nickname;
         this.profileImage = profileImage;
         this.returnMoney = returnMoney;
-        this.userBadges = userBadges;
     }
 }
