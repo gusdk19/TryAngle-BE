@@ -11,9 +11,12 @@ import org.springframework.http.HttpStatus;
 public enum SuccessStatus implements BaseErrorCode {
     // 가장 일반적인 응답
     _OK(HttpStatus.OK, "COMMON200", "요청에 성공했습니다."),
+
+    // User 관련 응답
     SIGNUP_SUCCESS(HttpStatus.OK, "COMMON200", "회원가입에 성공했습니다."),
     AVAILABLE_EMAIL(HttpStatus.OK, "COMMON200", "사용 가능한 이메일입니다."),
-    AVAILABLE_NICKNAME(HttpStatus.OK, "COMMON200", "사용 가능한 닉네임입니다.");
+    AVAILABLE_NICKNAME(HttpStatus.OK, "COMMON200", "사용 가능한 닉네임입니다."),
+    LOGIN_SUCCESS(HttpStatus.OK, "COMMON200", "로그인에 성공했습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
