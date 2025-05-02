@@ -1,6 +1,7 @@
 package capstone.TryAngle.web.controller;
 
 import capstone.TryAngle.common.ApiResponse;
+import capstone.TryAngle.common.status.SuccessStatus;
 import capstone.TryAngle.service.ChallengeService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,19 +15,19 @@ public class ChallengeController {
 
     @GetMapping
     public ApiResponse<?> getChallenges(){
-        return ApiResponse.onSuccess( challengeService.getChallenges());
+        return ApiResponse.onSuccess(SuccessStatus._OK, challengeService.getChallenges());
     }
 
     @GetMapping("/{challengeId}")
     public ApiResponse<?> getChallengeById( @PathVariable Integer challengeId){
-        return  ApiResponse.onSuccess(challengeService.getChallengeById(challengeId));
+        return  ApiResponse.onSuccess(SuccessStatus._OK, challengeService.getChallengeById(challengeId));
 
     }
 
     @GetMapping("my")
     public ApiResponse<?> getMyChallenges( @RequestHeader(value = "Authorization", required = true) String authorizationHeader){
         String userid = authorizationHeader.replace("Bearer ", "");
-        return ApiResponse.onSuccess(challengeService.getMyChallenges(userid));
+        return ApiResponse.onSuccess(SuccessStatus._OK, challengeService.getMyChallenges(userid));
     }
 
 

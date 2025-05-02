@@ -35,7 +35,8 @@ public class SecurityConfig {
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/login", "/user/signup", "/user/checkEmail", "/user/checkNickname").permitAll()
+//                        .requestMatchers("/user/login", "/user/signup", "/user/checkEmail", "/user/checkNickname").permitAll()
+                        .requestMatchers("/user/*", "/challenge/*").permitAll() // 임시적으로 모두 허용
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
 
