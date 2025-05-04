@@ -46,6 +46,7 @@ public class JwtFilter extends GenericFilterBean {
 
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
+            // "Bearer " 이후 실제 토큰만 추출
         }
 
         return null;
