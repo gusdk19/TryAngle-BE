@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Component
 public class TokenProvider {
     private final Key key;
-    private final long tokenValidityInMilliseconds;
+    private final long tokenValidityInMilliseconds; // 토큰 유효 시간
     private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
 
     public TokenProvider(
@@ -38,7 +38,7 @@ public class TokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-        // 토큰의 expire 시간을 설정
+        // 현재 시간 기준으로 토큰의 expire 시간을 설정
         long now = System.currentTimeMillis();
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
