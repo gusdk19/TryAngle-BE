@@ -43,6 +43,10 @@ public class User {
     @Column(name = "profile_image", length = 300)
     private String profileImage;
 
+    @Column(name = "challenge_money")
+    @Builder.Default
+    private Integer challengeMoney = 0;
+
     @Column(name = "return_money")
     @Builder.Default
     private Integer returnMoney = 0;
@@ -50,15 +54,30 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserBadge> userBadges = new ArrayList<>();
 
+    @Column(length = 50)
+    private String badgeDescription; // 뱃지 기반 소개
+
+    // 내가 팔로우한 사람들
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> followees = new ArrayList<>();
+
+    // 나를 팔로우한 사람들
+    @OneToMany(mappedBy = "followee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> followers = new ArrayList<>();
+
     public User(String email, String password, String name, String phone,
-                String description, String nickname, String profileImage, Integer returnMoney) {
+                String description, String badgeDescription, String nickname,
+                String profileImage, Integer challengeMoney, Integer returnMoney) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.phone = phone;
         this.description = description;
+        this.badgeDescription = badgeDescription;
         this.nickname = nickname;
         this.profileImage = profileImage;
+        this.challengeMoney = challengeMoney;
         this.returnMoney = returnMoney;
     }
+
 }
