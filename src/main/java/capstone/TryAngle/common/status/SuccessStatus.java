@@ -1,14 +1,14 @@
 package capstone.TryAngle.common.status;
 
-import capstone.TryAngle.common.code.BaseErrorCode;
-import capstone.TryAngle.common.code.ErrorReasonDTO;
+import capstone.TryAngle.common.code.BaseCode;
+import capstone.TryAngle.common.code.ReasonDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum SuccessStatus implements BaseErrorCode {
+public enum SuccessStatus implements BaseCode {
     // 가장 일반적인 응답
     _OK(HttpStatus.OK, "COMMON200", "요청에 성공했습니다."),
 
@@ -23,8 +23,8 @@ public enum SuccessStatus implements BaseErrorCode {
     private final String message;
 
     @Override
-    public ErrorReasonDTO getReason() {
-        return ErrorReasonDTO.builder()
+    public ReasonDTO getReason() {
+        return ReasonDTO.builder()
                 .message(message)
                 .code(code)
                 .isSuccess(true)
@@ -32,8 +32,8 @@ public enum SuccessStatus implements BaseErrorCode {
     }
 
     @Override
-    public ErrorReasonDTO getReasonHttpStatus() {
-        return ErrorReasonDTO.builder()
+    public ReasonDTO getReasonHttpStatus() {
+        return ReasonDTO.builder()
                 .message(message)
                 .code(code)
                 .isSuccess(true)

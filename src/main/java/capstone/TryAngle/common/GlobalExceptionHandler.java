@@ -9,10 +9,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(GeneralException.class)
-    public ResponseEntity<ErrorReasonDTO> handleGeneralException(GeneralException ex) {
+    public ResponseEntity<ApiResponse<Object>> handleGeneralException(GeneralException ex) {
         ErrorReasonDTO errorResponse = ex.getErrorReasonHttpStatus();
+        ApiResponse<Object> response = ApiResponse.onFailure(
+                errorResponse.getCode(),
+                errorResponse.getMessage(),
+                errorResponse.getHttpStatus().name()
+        );
         return ResponseEntity
                 .status(errorResponse.getHttpStatus())
-                .body(errorResponse);
+                .body(response);
     }
 }
