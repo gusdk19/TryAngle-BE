@@ -32,4 +32,10 @@ public class UserRequestDTO {
         private String email;
         private String password;
     }
+
+    @Getter
+    public static class ModifyUserRequestDTO {
+        private String nickname;
+        private String profileImage;
+    }
 }

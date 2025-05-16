@@ -80,4 +80,9 @@ public class User {
         this.returnMoney = returnMoney;
     }
 
+    public void updateUser(String newNickname, String newProfileImage) {
+        this.nickname = newNickname;
+        this.profileImage = newProfileImage;
+    }
+
 }

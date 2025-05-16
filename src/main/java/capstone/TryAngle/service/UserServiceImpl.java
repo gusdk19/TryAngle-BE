@@ -6,6 +6,7 @@ import capstone.TryAngle.model.user.User;
 import capstone.TryAngle.repository.FollowRepository;
 import capstone.TryAngle.repository.UserRepository;
 import capstone.TryAngle.web.converter.UserConverter;
+import capstone.TryAngle.web.dto.UserRequestDTO;
 import capstone.TryAngle.web.dto.UserResponseDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
+    private final AuthService authService;
 
     @Override
     public UserResponseDTO.MypageDTO getMypageByEmail(String email) {
@@ -28,5 +30,14 @@ public class UserServiceImpl implements UserService {
         int followeeCnt = followRepository.countByFollower(user); // 내가 팔로우하는 사람들
 
         return UserConverter.toMyPage(user, followerCnt, followeeCnt);
+    }
+
+    @Override
+    public void modifyUserInfo(String email, UserRequestDTO.ModifyUserRequestDTO userDto) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        authService.validateNickname(userDto.getNickname());
+        user.updateUser(userDto.getNickname(), userDto.getProfileImage());
     }
 }

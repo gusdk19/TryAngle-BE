@@ -16,7 +16,8 @@ public enum SuccessStatus implements BaseCode {
     SIGNUP_SUCCESS(HttpStatus.OK, "COMMON200", "회원가입에 성공했습니다."),
     AVAILABLE_EMAIL(HttpStatus.OK, "COMMON200", "사용 가능한 이메일입니다."),
     AVAILABLE_NICKNAME(HttpStatus.OK, "COMMON200", "사용 가능한 닉네임입니다."),
-    LOGIN_SUCCESS(HttpStatus.OK, "COMMON200", "로그인에 성공했습니다.");
+    LOGIN_SUCCESS(HttpStatus.OK, "COMMON200", "로그인에 성공했습니다."),
+    MODIFY_SUCCESS(HttpStatus.OK, "COMMON200", "회원 정보 수정에 성공했습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
