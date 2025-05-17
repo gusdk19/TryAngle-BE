@@ -29,4 +29,12 @@ public class MypageController {
         return ApiResponse.onSuccess(SuccessStatus.MODIFY_SUCCESS, null);
     }
 
+    @PutMapping("/modify/description")
+    public ApiResponse<?> modifyDescription(@RequestBody UserRequestDTO.ModifyUserRequestDTO modifyDTO,
+                                            @AuthenticationPrincipal User user) {
+        String email = user.getUsername();
+        userService.modifyDescription(email, modifyDTO);
+        return ApiResponse.onSuccess(SuccessStatus.MODIFY_SUCCESS, null);
+    }
+
 }

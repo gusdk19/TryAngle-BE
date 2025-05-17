@@ -85,4 +85,7 @@ public class User {
         this.profileImage = newProfileImage;
     }
 
+    public void updateDescription(String newDescription) {
+        this.description = newDescription;
+    }
 }

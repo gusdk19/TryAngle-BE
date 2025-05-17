@@ -37,5 +37,6 @@ public class UserRequestDTO {
     public static class ModifyUserRequestDTO {
         private String nickname;
         private String profileImage;
+        private String description;
     }
 }

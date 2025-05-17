@@ -40,4 +40,11 @@ public class UserServiceImpl implements UserService {
         authService.validateNickname(userDto.getNickname());
         user.updateUser(userDto.getNickname(), userDto.getProfileImage());
     }
+
+    @Override
+    public void modifyDescription(String email, UserRequestDTO.ModifyUserRequestDTO userDto) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        user.updateDescription(userDto.getDescription());
+    }
 }

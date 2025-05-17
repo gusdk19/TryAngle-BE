@@ -6,4 +6,5 @@ import capstone.TryAngle.web.dto.UserResponseDTO;
 public interface UserService {
     UserResponseDTO.MypageDTO getMypageByEmail(String email);
     void modifyUserInfo(String email, UserRequestDTO.ModifyUserRequestDTO userDto);
+    void modifyDescription(String email, UserRequestDTO.ModifyUserRequestDTO userDto);
 }
