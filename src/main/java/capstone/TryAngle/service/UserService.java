@@ -3,8 +3,11 @@ package capstone.TryAngle.service;
 import capstone.TryAngle.web.dto.UserRequestDTO;
 import capstone.TryAngle.web.dto.UserResponseDTO;
 
+import java.util.List;
+
 public interface UserService {
     UserResponseDTO.MypageDTO getMypageByEmail(String email);
     void modifyUserInfo(String email, UserRequestDTO.ModifyUserRequestDTO userDto);
     void modifyDescription(String email, UserRequestDTO.ModifyUserRequestDTO userDto);
+    List<UserResponseDTO.FollowingsDTO> getUserFollowings(String email);
 }

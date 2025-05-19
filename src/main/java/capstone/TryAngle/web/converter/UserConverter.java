@@ -34,4 +34,12 @@ public class UserConverter {
                 followeeCnt
         );
     }
+
+    public static UserResponseDTO.FollowingsDTO toFollowings(User user) {
+        return new UserResponseDTO.FollowingsDTO(
+                user.getUserId(),
+                user.getNickname(),
+                user.getProfileImage()
+        );
+    }
 }

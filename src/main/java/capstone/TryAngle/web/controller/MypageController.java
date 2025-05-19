@@ -37,4 +37,10 @@ public class MypageController {
         return ApiResponse.onSuccess(SuccessStatus.MODIFY_SUCCESS, null);
     }
 
+    @GetMapping("/followings")
+    public ApiResponse<?> getFollowings(@AuthenticationPrincipal User user) {
+        String email = user.getUsername();
+        return ApiResponse.onSuccess(SuccessStatus._OK, userService.getUserFollowings(email));
+    }
+
 }

@@ -12,6 +12,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -46,5 +49,16 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
         user.updateDescription(userDto.getDescription());
+    }
+
+    @Override
+    public List<UserResponseDTO.FollowingsDTO> getUserFollowings(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        List<User> followees = followRepository.findFolloweesByFollower(user);
+
+        return followees.stream()
+                .map(UserConverter::toFollowings)
+                .collect(Collectors.toList());
     }
 }
