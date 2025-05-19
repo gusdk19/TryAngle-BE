@@ -24,11 +24,19 @@ public class UserServiceImpl implements UserService {
     private final FollowRepository followRepository;
     private final AuthService authService;
 
+    private User findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
+    }
+
+    private User findUserByNickname(String nickname) {
+        return userRepository.findByNickname(nickname)
+                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
+    }
+
     @Override
     public UserResponseDTO.MypageDTO getMypageByEmail(String email) {
-        // userId로 유저 정보 조회
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        User user = findUserByEmail(email);
 
         int followerCnt = followRepository.countByFollowee(user); // 나를 팔로우하는 사람들
         int followeeCnt = followRepository.countByFollower(user); // 내가 팔로우하는 사람들
@@ -38,8 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void modifyUserInfo(String email, UserRequestDTO.ModifyUserRequestDTO userDto) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        User user = findUserByEmail(email);
 
         authService.validateNickname(userDto.getNickname());
         user.updateUser(userDto.getNickname(), userDto.getProfileImage());
@@ -47,15 +54,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void modifyDescription(String email, UserRequestDTO.ModifyUserRequestDTO userDto) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        User user = findUserByEmail(email);
         user.updateDescription(userDto.getDescription());
     }
 
     @Override
     public List<UserResponseDTO.FollowingsDTO> getUserFollowings(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        User user = findUserByEmail(email);
         List<User> followees = followRepository.findFolloweesByFollower(user);
 
         return followees.stream()
@@ -65,8 +70,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponseDTO.FollowersDTO> getUserFollowers(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        User user = findUserByEmail(email);
         List<User> followers = followRepository.findFollowersByFollowee(user);
 
         return followers.stream()
@@ -79,17 +83,14 @@ public class UserServiceImpl implements UserService {
         if (followeeNickname == null || followeeNickname.isBlank()) {
             throw new GeneralException(ErrorStatus.MISSING_REQUIRED_VALUE);
         }
-        User follower = userRepository.findByEmail(email)
-                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
-        User followee = userRepository.findByNickname(followeeNickname)
-                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        User follower = findUserByEmail(email);
+        User followee = findUserByNickname(followeeNickname);
 
         if (follower.equals(followee)) {
             throw new GeneralException(ErrorStatus.CANNOT_FOLLOW_SELF);
         }
 
-        boolean alreadyFollowing = followRepository.existsByFollowerAndFollowee(follower, followee);
-        if (alreadyFollowing) {
+        if (followRepository.existsByFollowerAndFollowee(follower, followee)) {
             throw new GeneralException(ErrorStatus.ALREADY_FOLLOWING);
         }
 
@@ -102,10 +103,8 @@ public class UserServiceImpl implements UserService {
         if (followeeNickname == null || followeeNickname.isBlank()) {
             throw new GeneralException(ErrorStatus.MISSING_REQUIRED_VALUE);
         }
-        User follower = userRepository.findByEmail(email)
-                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
-        User followee = userRepository.findByNickname(followeeNickname)
-                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        User follower = findUserByEmail(email);
+        User followee = findUserByNickname(followeeNickname);
 
         Follow follow = followRepository.findByFollowerAndFollowee(follower, followee)
                 .orElseThrow(()->new GeneralException(ErrorStatus.NOT_FOLLOWING));
