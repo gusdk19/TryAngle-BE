@@ -57,4 +57,12 @@ public class MypageController {
         return ApiResponse.onSuccess(SuccessStatus.FOLLOW_SUCCESS, null);
     }
 
+    @DeleteMapping("/unfollow")
+    public ApiResponse<?> unfollow(@RequestBody UserRequestDTO.FollowDTO followDTO,
+                                   @AuthenticationPrincipal User user) {
+        String email = user.getUsername();
+        userService.unfollow(email, followDTO.getNickname());
+        return ApiResponse.onSuccess(SuccessStatus.UNFOLLOW_SUCCESS, null);
+    }
+
 }

@@ -12,4 +12,5 @@ public interface UserService {
     List<UserResponseDTO.FollowingsDTO> getUserFollowings(String email);
     List<UserResponseDTO.FollowersDTO> getUserFollowers(String email);
     void follow(String email, String followeeNickname);
+    void unfollow(String email, String followeeNickname);
 }

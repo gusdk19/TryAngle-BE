@@ -96,4 +96,19 @@ public class UserServiceImpl implements UserService {
         Follow follow = new Follow(follower, followee);
         followRepository.save(follow);
     }
+
+    @Override
+    public void unfollow(String email, String followeeNickname) {
+        if (followeeNickname == null || followeeNickname.isBlank()) {
+            throw new GeneralException(ErrorStatus.MISSING_REQUIRED_VALUE);
+        }
+        User follower = userRepository.findByEmail(email)
+                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        User followee = userRepository.findByNickname(followeeNickname)
+                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Follow follow = followRepository.findByFollowerAndFollowee(follower, followee)
+                .orElseThrow(()->new GeneralException(ErrorStatus.NOT_FOLLOWING));
+        followRepository.delete(follow);
+    }
 }

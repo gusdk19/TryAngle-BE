@@ -27,6 +27,7 @@ ErrorStatus implements BaseErrorCode {
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "USER4009", "이미 사용중인 이메일입니다."),
     CANNOT_FOLLOW_SELF(HttpStatus.CONFLICT, "USER4009", "내 닉네임은 팔로우할 수 없습니다."),
     ALREADY_FOLLOWING(HttpStatus.CONFLICT, "USER4009", "이미 팔로잉 중입니다."),
+    NOT_FOLLOWING(HttpStatus.NOT_FOUND, "USER4004", "팔로잉 하고 있지 않습니다."),
 
     // 챌린지 관련 응답
     CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND, "CHALLENGE$)$", "챌린지 정보가 존재하지 않습니다")

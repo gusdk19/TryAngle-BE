@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
     int countByFollowee(User user);
@@ -19,4 +20,6 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     List<User> findFollowersByFollowee(@Param("followee") User followee);
 
     boolean existsByFollowerAndFollowee(User follower, User followee);
+
+    Optional<Follow> findByFollowerAndFollowee(User follower, User followee);
 }
