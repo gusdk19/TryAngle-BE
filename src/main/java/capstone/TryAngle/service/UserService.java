@@ -10,4 +10,5 @@ public interface UserService {
     void modifyUserInfo(String email, UserRequestDTO.ModifyUserRequestDTO userDto);
     void modifyDescription(String email, UserRequestDTO.ModifyUserRequestDTO userDto);
     List<UserResponseDTO.FollowingsDTO> getUserFollowings(String email);
+    List<UserResponseDTO.FollowersDTO> getUserFollowers(String email);
 }

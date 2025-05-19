@@ -42,4 +42,12 @@ public class UserConverter {
                 user.getProfileImage()
         );
     }
+
+    public static UserResponseDTO.FollowersDTO toFollowers(User user) {
+        return new UserResponseDTO.FollowersDTO(
+                user.getUserId(),
+                user.getNickname(),
+                user.getProfileImage()
+        );
+    }
 }

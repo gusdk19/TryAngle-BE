@@ -35,4 +35,12 @@ public class UserResponseDTO {
         private String nickname;
         private String profileImage;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class FollowersDTO {
+        private Integer userId;
+        private String nickname;
+        private String profileImage;
+    }
 }

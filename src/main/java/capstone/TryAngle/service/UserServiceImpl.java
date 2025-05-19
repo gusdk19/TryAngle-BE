@@ -61,4 +61,15 @@ public class UserServiceImpl implements UserService {
                 .map(UserConverter::toFollowings)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<UserResponseDTO.FollowersDTO> getUserFollowers(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        List<User> followers = followRepository.findFollowersByFollowee(user);
+
+        return followers.stream()
+                .map(UserConverter::toFollowers)
+                .collect(Collectors.toList());
+    }
 }
