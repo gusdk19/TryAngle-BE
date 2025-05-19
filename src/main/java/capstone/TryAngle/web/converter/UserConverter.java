@@ -34,4 +34,20 @@ public class UserConverter {
                 followeeCnt
         );
     }
+
+    public static UserResponseDTO.FollowingsDTO toFollowings(User user) {
+        return new UserResponseDTO.FollowingsDTO(
+                user.getUserId(),
+                user.getNickname(),
+                user.getProfileImage()
+        );
+    }
+
+    public static UserResponseDTO.FollowersDTO toFollowers(User user) {
+        return new UserResponseDTO.FollowersDTO(
+                user.getUserId(),
+                user.getNickname(),
+                user.getProfileImage()
+        );
+    }
 }
