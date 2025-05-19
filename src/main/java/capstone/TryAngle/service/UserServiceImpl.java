@@ -2,6 +2,7 @@ package capstone.TryAngle.service;
 
 import capstone.TryAngle.common.GeneralException;
 import capstone.TryAngle.common.status.ErrorStatus;
+import capstone.TryAngle.model.user.Follow;
 import capstone.TryAngle.model.user.User;
 import capstone.TryAngle.repository.FollowRepository;
 import capstone.TryAngle.repository.UserRepository;
@@ -71,5 +72,28 @@ public class UserServiceImpl implements UserService {
         return followers.stream()
                 .map(UserConverter::toFollowers)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void follow(String email, String followeeNickname) {
+        if (followeeNickname == null || followeeNickname.isBlank()) {
+            throw new GeneralException(ErrorStatus.MISSING_REQUIRED_VALUE);
+        }
+        User follower = userRepository.findByEmail(email)
+                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
+        User followee = userRepository.findByNickname(followeeNickname)
+                .orElseThrow(()->new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        if (follower.equals(followee)) {
+            throw new GeneralException(ErrorStatus.CANNOT_FOLLOW_SELF);
+        }
+
+        boolean alreadyFollowing = followRepository.existsByFollowerAndFollowee(follower, followee);
+        if (alreadyFollowing) {
+            throw new GeneralException(ErrorStatus.ALREADY_FOLLOWING);
+        }
+
+        Follow follow = new Follow(follower, followee);
+        followRepository.save(follow);
     }
 }

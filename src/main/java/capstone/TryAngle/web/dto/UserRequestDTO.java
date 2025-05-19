@@ -39,4 +39,9 @@ public class UserRequestDTO {
         private String profileImage;
         private String description;
     }
+
+    @Getter
+    public static class FollowDTO {
+        private String nickname;
+    }
 }
