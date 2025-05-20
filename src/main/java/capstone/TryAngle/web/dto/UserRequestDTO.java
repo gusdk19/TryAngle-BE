@@ -44,4 +44,10 @@ public class UserRequestDTO {
     public static class FollowDTO {
         private String nickname;
     }
+
+    @Getter
+    public static class ReportRequestDTO {
+        private String targetNickname;
+        private String reason;
+    }
 }

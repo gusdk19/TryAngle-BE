@@ -19,7 +19,8 @@ public enum SuccessStatus implements BaseCode {
     LOGIN_SUCCESS(HttpStatus.OK, "USER200", "로그인에 성공했습니다."),
     MODIFY_SUCCESS(HttpStatus.OK, "USER200", "회원 정보 수정에 성공했습니다."),
     FOLLOW_SUCCESS(HttpStatus.OK, "USER200", "팔로우에 성공했습니다."),
-    UNFOLLOW_SUCCESS(HttpStatus.OK, "USER200", "언팔로우에 성공했습니다.");
+    UNFOLLOW_SUCCESS(HttpStatus.OK, "USER200", "언팔로우에 성공했습니다."),
+    REPORT_SUCCESS(HttpStatus.OK, "USER200", "신고가 완료되었습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

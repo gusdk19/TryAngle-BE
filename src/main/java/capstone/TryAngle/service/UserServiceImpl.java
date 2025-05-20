@@ -3,8 +3,10 @@ package capstone.TryAngle.service;
 import capstone.TryAngle.common.GeneralException;
 import capstone.TryAngle.common.status.ErrorStatus;
 import capstone.TryAngle.model.user.Follow;
+import capstone.TryAngle.model.user.Report;
 import capstone.TryAngle.model.user.User;
 import capstone.TryAngle.repository.FollowRepository;
+import capstone.TryAngle.repository.ReportRepository;
 import capstone.TryAngle.repository.UserRepository;
 import capstone.TryAngle.web.converter.UserConverter;
 import capstone.TryAngle.web.dto.UserRequestDTO;
@@ -23,6 +25,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
     private final AuthService authService;
+    private final ReportRepository reportRepository;
 
     private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
@@ -126,7 +129,24 @@ public class UserServiceImpl implements UserService {
         // 모든 사용자 리스트를 팔로우 여부(isFollowing)까지 담아서 AllUsersDTO로 리턴
         return allUsers.stream()
                 .map(user -> UserConverter.toAllUsers(user, followingIds.contains(user.getUserId())))
-                .collect(Collectors.toList());
+                .toList();
 
+    }
+
+    @Override
+    public void report(String email, UserRequestDTO.ReportRequestDTO reportDTO) {
+        if (reportDTO.getReason() == null || reportDTO.getReason().isBlank() ||
+            reportDTO.getTargetNickname() == null || reportDTO.getTargetNickname().isBlank()) {
+            throw new GeneralException(ErrorStatus.MISSING_REQUIRED_VALUE);
+        }
+        User reporter = findUserByEmail(email);
+        User target = findUserByNickname(reportDTO.getTargetNickname());
+
+        if (reporter.equals(target)) {
+            throw new GeneralException(ErrorStatus.CANNOT_REPORT_SELF);
+        }
+
+        Report report = new Report(reporter, target, reportDTO.getReason());
+        reportRepository.save(report);
     }
 }

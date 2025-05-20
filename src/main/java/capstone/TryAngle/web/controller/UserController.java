@@ -3,9 +3,12 @@ package capstone.TryAngle.web.controller;
 import capstone.TryAngle.common.ApiResponse;
 import capstone.TryAngle.common.status.SuccessStatus;
 import capstone.TryAngle.service.AuthService;
+import capstone.TryAngle.service.UserService;
 import capstone.TryAngle.web.dto.UserRequestDTO;
 import capstone.TryAngle.web.dto.UserResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
     private final AuthService authService;
+    private final UserService userService;
 
     @PostMapping("/checkEmail")
     public ApiResponse<?> checkEmail(@RequestBody UserRequestDTO.EmailCheckDTO emailDto) {
@@ -37,6 +41,15 @@ public class UserController {
     public ApiResponse<UserResponseDTO.LoginResponseDTO> login(@RequestBody UserRequestDTO.LoginRequestDTO request) {
         UserResponseDTO.LoginResponseDTO response = authService.login(request.getEmail(), request.getPassword());
         return ApiResponse.onSuccess(SuccessStatus.LOGIN_SUCCESS, response);
+    }
+
+    @PostMapping("/report")
+    public ApiResponse<?> userReport(@RequestBody UserRequestDTO.ReportRequestDTO reportDTO,
+                                     @AuthenticationPrincipal User user) {
+        String email = user.getUsername();
+
+        userService.report(email, reportDTO);
+        return ApiResponse.onSuccess(SuccessStatus.REPORT_SUCCESS, null);
     }
 
 }
