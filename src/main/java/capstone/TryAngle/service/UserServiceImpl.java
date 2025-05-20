@@ -154,7 +154,7 @@ public class UserServiceImpl implements UserService {
     public void withdrawal(String email, Integer amount) {
         if (amount == null) {
             throw new GeneralException(ErrorStatus.MISSING_REQUIRED_VALUE);
-        } else if (amount < 5000) {
+        } else if (amount < 5000 || amount % 1000 != 0) {
             throw new GeneralException(ErrorStatus.INVALID_WITHDRAWAL_MONEY);
         }
 
