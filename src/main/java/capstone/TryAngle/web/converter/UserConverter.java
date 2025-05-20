@@ -50,4 +50,13 @@ public class UserConverter {
                 user.getProfileImage()
         );
     }
+
+    public static UserResponseDTO.AllUsersDTO toAllUsers(User user, boolean isFollowing) {
+        return new UserResponseDTO.AllUsersDTO(
+                user.getUserId(),
+                user.getNickname(),
+                user.getProfileImage(),
+                isFollowing
+        );
+    }
 }

@@ -43,4 +43,13 @@ public class UserResponseDTO {
         private String nickname;
         private String profileImage;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class AllUsersDTO {
+        private Integer userId;
+        private String nickname;
+        private String profileImage;
+        private Boolean isFollowing;
+    }
 }

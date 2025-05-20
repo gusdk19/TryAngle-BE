@@ -22,4 +22,7 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     boolean existsByFollowerAndFollowee(User follower, User followee);
 
     Optional<Follow> findByFollowerAndFollowee(User follower, User followee);
+
+    @Query("SELECT f.followee.userId FROM Follow f WHERE f.follower = :follower")
+    List<Integer> findFollowingIdsByFollower(User follower);
 }

@@ -65,4 +65,10 @@ public class MypageController {
         return ApiResponse.onSuccess(SuccessStatus.UNFOLLOW_SUCCESS, null);
     }
 
+    @GetMapping("/userlist")
+    public ApiResponse<?> getAllUsers(@AuthenticationPrincipal User user) {
+        String email = user.getUsername();
+        return ApiResponse.onSuccess(SuccessStatus._OK, userService.getAllUsers(email));
+    }
+
 }

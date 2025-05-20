@@ -110,4 +110,23 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(()->new GeneralException(ErrorStatus.NOT_FOLLOWING));
         followRepository.delete(follow);
     }
+
+    @Override
+    public List<UserResponseDTO.AllUsersDTO> getAllUsers(String email) {
+        User currentUser = findUserByEmail(email);
+
+        // 내가 팔로우하고 있는 id들 조회
+        List<Integer> followingIds = followRepository.findFollowingIdsByFollower(currentUser);
+
+        // 나를 제외한 TryAngle의 모든 사용자 리스트
+        List<User> allUsers = userRepository.findAll().stream()
+                .filter(u -> !u.getUserId().equals(currentUser.getUserId()))
+                .toList();
+
+        // 모든 사용자 리스트를 팔로우 여부(isFollowing)까지 담아서 AllUsersDTO로 리턴
+        return allUsers.stream()
+                .map(user -> UserConverter.toAllUsers(user, followingIds.contains(user.getUserId())))
+                .collect(Collectors.toList());
+
+    }
 }
