@@ -15,4 +15,5 @@ public interface UserService {
     void unfollow(String email, String followeeNickname);
     List<UserResponseDTO.AllUsersDTO> getAllUsers(String email);
     void report(String email, UserRequestDTO.ReportRequestDTO reportDTO);
+    void withdrawal(String email, Integer amount);
 }

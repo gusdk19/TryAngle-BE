@@ -29,6 +29,7 @@ ErrorStatus implements BaseErrorCode {
     ALREADY_FOLLOWING(HttpStatus.CONFLICT, "USER4009", "이미 팔로잉 중입니다."),
     NOT_FOLLOWING(HttpStatus.NOT_FOUND, "USER4004", "팔로잉 하고 있지 않습니다."),
     CANNOT_REPORT_SELF(HttpStatus.CONFLICT, "USER4009", "내 닉네임은 신고할 수 없습니다."),
+    INVALID_WITHDRAWAL_MONEY(HttpStatus.BAD_REQUEST, "USER4000", "출금은 5000원 이상부터 가능합니다."),
 
     // 챌린지 관련 응답
     CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND, "CHALLENGE$)$", "챌린지 정보가 존재하지 않습니다")

@@ -71,4 +71,15 @@ public class MypageController {
         return ApiResponse.onSuccess(SuccessStatus._OK, userService.getAllUsers(email));
     }
 
+    @PostMapping("/withdrawal")
+    public ApiResponse<?> withdrawal(@RequestBody UserRequestDTO.WithdrawalDTO withdrawalDTO,
+                                  @AuthenticationPrincipal User user) {
+        String email = user.getUsername();
+        Integer amount = withdrawalDTO.getAmount();
+
+        userService.withdrawal(email, amount);
+        String message = amount + "원이 출금되었습니다.";
+        return ApiResponse.onSuccess(SuccessStatus.WITHDRAWAL_SUCCESS, message);
+    }
+
 }

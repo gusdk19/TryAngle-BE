@@ -88,4 +88,8 @@ public class User {
     public void updateDescription(String newDescription) {
         this.description = newDescription;
     }
+
+    public void withdrawal(int amount) {
+        this.returnMoney -= amount;
+    }
 }

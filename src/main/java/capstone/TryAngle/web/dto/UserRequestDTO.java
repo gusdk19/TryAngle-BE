@@ -50,4 +50,9 @@ public class UserRequestDTO {
         private String targetNickname;
         private String reason;
     }
+
+    @Getter
+    public static class WithdrawalDTO {
+        private Integer amount;
+    }
 }
