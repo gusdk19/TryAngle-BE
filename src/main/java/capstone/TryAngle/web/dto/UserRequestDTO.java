@@ -32,4 +32,27 @@ public class UserRequestDTO {
         private String email;
         private String password;
     }
+
+    @Getter
+    public static class ModifyUserRequestDTO {
+        private String nickname;
+        private String profileImage;
+        private String description;
+    }
+
+    @Getter
+    public static class FollowDTO {
+        private String nickname;
+    }
+
+    @Getter
+    public static class ReportRequestDTO {
+        private String targetNickname;
+        private String reason;
+    }
+
+    @Getter
+    public static class WithdrawalDTO {
+        private Integer amount;
+    }
 }
