@@ -1,6 +1,7 @@
 package capstone.TryAngle.web.converter;
 
 import capstone.TryAngle.model.challenge.Challenge;
+import capstone.TryAngle.model.challenge.Participation;
 import capstone.TryAngle.web.dto.ChallengeResponseDTO;
 
 import java.util.List;
@@ -50,6 +51,28 @@ public class ChallengeConverter {
                         challenge.getReturnType(),
                         challenge.getAuthFrequency(),
                         challenge.getLeader().getNickname()
+        );
+
+    }
+
+    public static ChallengeResponseDTO.getChallengeDTO toMyChallengeDTO(Challenge challenge, Participation participation) {
+        return new ChallengeResponseDTO.getChallengeDTO(
+                challenge.getChallengeId(),
+                challenge.getChallengeName(),
+                challenge.getChallengeThumbnail(),
+                challenge.getChallengeShortIntro(),
+                challenge.getCategory(),
+                challenge.getChallengePublic(),
+                challenge.getStartDate(),
+                challenge.getEndDate(),
+                challenge.getAuthTimeStart(),
+                challenge.getAuthTimeEnd(),
+                challenge.getMaxPeople(),
+                challenge.getNowPeople(),
+                challenge.getMinDeposit(),
+                challenge.getReturnType(),
+                challenge.getAuthFrequency(),
+                challenge.getLeader().getNickname()
         );
 
     }
