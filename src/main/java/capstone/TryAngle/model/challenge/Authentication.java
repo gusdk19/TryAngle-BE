@@ -20,6 +20,9 @@ public class Authentication {
     @Column(name="authentication_id", nullable = false)
     private Integer authenticationId;
 
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="participation_id", nullable = false)
+    private Participation participation;
     @Column(name="auth_image", nullable = false)
     private String authImage;
 

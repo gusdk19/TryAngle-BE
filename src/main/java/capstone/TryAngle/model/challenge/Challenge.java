@@ -3,6 +3,7 @@ package capstone.TryAngle.model.challenge;
 import capstone.TryAngle.model.user.NotificationType;
 import capstone.TryAngle.model.user.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,6 +17,7 @@ import java.time.LocalTime;
 @Table(name="challenge")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 
 public class Challenge {
@@ -41,7 +43,7 @@ public class Challenge {
     @Column(name = "challenge_shortintro", nullable = true, length = 50)
     private String challengeShortIntro;
 
-    @Column(name = "challenge_description", nullable = false, length=200)
+    @Column(name = "challenge_description", nullable = false)
     private String challengeDescription;
 
     @Column(name = "challenge_public", nullable = false)
@@ -77,28 +79,17 @@ public class Challenge {
     @Column(name="invite_code", nullable = true, length=10)
     private String inviteCode;
 
+    @Column(name="deposit_manage_method", nullable = false)
+    private String depositManageMethod;
+
+    @Column(name = "auth_method", nullable = false)
+    private String authMethod;
+
+    @Column(name = "vote_method", nullable = false)
+    private String voteMethod;
+
     @CreatedDate
     @Column(name="created_at", nullable = false)
     private LocalDateTime createdAt;
 
-
-    public Challenge(Category category, User leader, String challengeName, String challengeThumbnail, String challengeShortIntro, String challengeDescription, Boolean challengePublic, LocalDate startDate, LocalDate endDate, LocalTime authTimeStart, LocalTime authTimeEnd, Integer maxPeople, Integer nowPeople, Integer minDeposit, Boolean returnType, String authFrequency, String inviteCode) {
-        this.category = category;
-        this.leader = leader;
-        this.challengeName = challengeName;
-        this.challengeThumbnail = challengeThumbnail;
-        this.challengeShortIntro = challengeShortIntro;
-        this.challengeDescription = challengeDescription;
-        this.challengePublic = challengePublic;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.authTimeStart = authTimeStart;
-        this.authTimeEnd = authTimeEnd;
-        this.maxPeople = maxPeople;
-        this.nowPeople = nowPeople;
-        this.minDeposit = minDeposit;
-        this.returnType = returnType;
-        this.authFrequency = authFrequency;
-        this.inviteCode = inviteCode;
-    }
 }

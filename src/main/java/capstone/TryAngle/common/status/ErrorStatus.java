@@ -32,8 +32,10 @@ ErrorStatus implements BaseErrorCode {
     INVALID_WITHDRAWAL_MONEY(HttpStatus.BAD_REQUEST, "USER4000", "출금은 5000원 이상, 1000원 단위로 가능합니다."),
 
     // 챌린지 관련 응답
-    CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND, "CHALLENGE$)$", "챌린지 정보가 존재하지 않습니다")
-    ;
+    CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND, "CHALLENGE404", "챌린지 정보가 존재하지 않습니다"),
+
+    // 참여 관련 응답
+    PARTICIPATION_NOT_FOUND(HttpStatus.NOT_FOUND, "PARTICIPATION404" ,"해당 챌린지에 해당 유저가 참여한 정보가 없습니다." );
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
