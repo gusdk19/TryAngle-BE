@@ -1,5 +1,6 @@
 package capstone.TryAngle.web.converter;
 
+import capstone.TryAngle.model.user.Badge;
 import capstone.TryAngle.model.user.User;
 import capstone.TryAngle.web.dto.UserRequestDTO;
 import capstone.TryAngle.web.dto.UserResponseDTO;
@@ -57,6 +58,17 @@ public class UserConverter {
                 user.getNickname(),
                 user.getProfileImage(),
                 isFollowing
+        );
+    }
+
+    public static UserResponseDTO.UserBadgesDTO toUserBadges(Badge badge, boolean isVisible) {
+        return new UserResponseDTO.UserBadgesDTO(
+                badge.getBadgeId(),
+                badge.getBadgeName(),
+                badge.getBadgeDescription(),
+                badge.getUnlockCondition(),
+                isVisible,
+                badge.getBadgeImage()
         );
     }
 }

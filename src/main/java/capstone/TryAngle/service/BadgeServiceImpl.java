@@ -70,4 +70,26 @@ public class BadgeServiceImpl implements BadgeService {
         userBadgeRepository.save(userBadge);
 
     }
+
+    @Override
+    public List<UserResponseDTO.UserBadgesDTO> userBadges(String email) {
+        User user = findUserByEmail(email);
+
+        List<Badge> allBadges = badgeRepository.findAll(); // 모든 뱃지
+        List<UserBadge> userBadges = userBadgeRepository.findByUser(user); // 유저가 보유한 뱃지
+
+        Map<Integer, UserBadge> ownedBadges = userBadges.stream()
+                .collect(Collectors.toMap(
+                        ub -> ub.getBadge().getBadgeId(),
+                        ub -> ub
+                ));
+
+        return allBadges.stream()
+                .map(badge -> {
+                    UserBadge userBadge = ownedBadges.get(badge.getBadgeId());
+                    boolean isVisible = userBadge != null && userBadge.getIsVisible();
+                    return UserConverter.toUserBadges(badge, isVisible);
+                })
+                .toList();
+    }
 }
