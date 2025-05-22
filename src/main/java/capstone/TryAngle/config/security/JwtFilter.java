@@ -1,4 +1,4 @@
-package capstone.TryAngle.config;
+package capstone.TryAngle.config.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

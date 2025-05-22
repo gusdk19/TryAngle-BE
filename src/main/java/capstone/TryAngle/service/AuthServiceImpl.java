@@ -2,7 +2,7 @@ package capstone.TryAngle.service;
 
 import capstone.TryAngle.common.GeneralException;
 import capstone.TryAngle.common.status.ErrorStatus;
-import capstone.TryAngle.config.TokenProvider;
+import capstone.TryAngle.config.security.TokenProvider;
 import capstone.TryAngle.model.user.User;
 import capstone.TryAngle.repository.UserRepository;
 import capstone.TryAngle.web.converter.UserConverter;

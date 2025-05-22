@@ -1,4 +1,4 @@
-package capstone.TryAngle.config;
+package capstone.TryAngle.config.security;
 
 import capstone.TryAngle.common.ApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
