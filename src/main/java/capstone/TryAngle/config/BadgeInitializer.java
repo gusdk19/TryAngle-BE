@@ -1,7 +1,7 @@
 package capstone.TryAngle.config;
 
 import capstone.TryAngle.repository.BadgeRepository;
-import capstone.TryAngle.service.BadgeService;
+import capstone.TryAngle.service.BadgeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class BadgeInitializer implements CommandLineRunner {
     private final BadgeRepository badgeRepository;
-    private final BadgeService badgeService;
+    private final BadgeServiceImpl badgeServiceImpl;
 
     @Override
     public void run(String... args) throws Exception {
         if (badgeRepository.count() == 0) {
-            badgeService.initializeBadges();
+            badgeServiceImpl.initializeBadges();
         }
     }
 }
