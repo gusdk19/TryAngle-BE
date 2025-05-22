@@ -1,12 +1,16 @@
 package capstone.TryAngle.web.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 
 public class UserRequestDTO {
 
     @Getter
-    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class SignupRequestDTO {
         private String email;
         private String name;
