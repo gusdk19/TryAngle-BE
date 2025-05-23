@@ -1,4 +1,4 @@
-package capstone.TryAngle.config;
+package capstone.TryAngle.config.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

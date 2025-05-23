@@ -1,8 +1,7 @@
-package capstone.TryAngle.config;
+package capstone.TryAngle.config.security;
 
 import capstone.TryAngle.common.ApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
