@@ -1,4 +1,4 @@
-package capstone.TryAngle.config;
+package capstone.TryAngle.config.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
