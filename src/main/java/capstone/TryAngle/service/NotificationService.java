@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface NotificationService {
     List<NotificationResponseDTO.AllNotificationsDTO> getNotifications(String email);
+    void markAsRead(Integer notificationId);
 }

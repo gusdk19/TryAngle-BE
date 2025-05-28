@@ -38,4 +38,14 @@ public class NotificationServiceImpl implements NotificationService {
                 .map(NotificationConverter::toAllNotificationsDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void markAsRead(Integer notificationId) {
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(()->new GeneralException(ErrorStatus.NOTIFICATION_NOT_FOUND));
+
+        if (!notification.getIsRead()) {
+            notification.markIsRead(true);
+        }
+    }
 }

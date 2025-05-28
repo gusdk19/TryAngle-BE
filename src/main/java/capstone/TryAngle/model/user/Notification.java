@@ -54,4 +54,8 @@ public class Notification {
         this.isRead = isRead;
         this.message = message;
     }
+
+    public void markIsRead(Boolean isRead) {
+        this.isRead = isRead;
+    }
 }

@@ -6,9 +6,7 @@ import capstone.TryAngle.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,5 +19,12 @@ public class NotificationController {
     public ApiResponse<?> getNotification(@AuthenticationPrincipal User user) {
         String email = user.getUsername();
         return ApiResponse.onSuccess(SuccessStatus._OK, notificationService.getNotifications(email));
+    }
+
+    @PatchMapping("/notification/{notificationId}/read")
+    public ApiResponse<?> readNotification(@PathVariable("notificationId") Integer notificationId) {
+        notificationService.markAsRead(notificationId);
+        return ApiResponse.onSuccess(SuccessStatus.MARK_READ_SUCCESS, null);
+
     }
 }
