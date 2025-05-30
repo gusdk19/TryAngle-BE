@@ -3,6 +3,7 @@ package capstone.TryAngle.web.controller;
 import capstone.TryAngle.common.ApiResponse;
 import capstone.TryAngle.common.status.SuccessStatus;
 import capstone.TryAngle.service.ChallengeService;
+import capstone.TryAngle.web.dto.ChallengeRequestDTO;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -43,7 +44,31 @@ public class ChallengeController {
 
     }
 
+    // 챌린지 삭제
+    @DeleteMapping("/{challengeId}")
+    public ApiResponse deleteChallenge(@PathVariable Integer challengeId, @AuthenticationPrincipal User loginUser ){
+        String email = loginUser.getUsername();
+        challengeService.deleteChallenge(challengeId, email);
+        return ApiResponse.onSuccess(SuccessStatus.DELETE_SUCCESS, null);
+    }
 
+    // 챌린지 생성
+    @PostMapping
+    public ApiResponse createChallenge(@RequestBody ChallengeRequestDTO.createChallengeDTO createChallengeDTO, @AuthenticationPrincipal User loginUser){
+
+        String email = loginUser.getUsername();
+        challengeService.createChallenge(createChallengeDTO, email);
+        return ApiResponse.onSuccess(SuccessStatus.CREATE_SUCCESS, null);
+    }
+
+    // 챌린지 수정
+    @PutMapping("/{challengeId}")
+    public ApiResponse<?> updateChallenge(@PathVariable Integer challengeId,
+            @RequestBody ChallengeRequestDTO.createChallengeDTO createChallengeDTO, @AuthenticationPrincipal User loginUser) {
+        String email = loginUser.getUsername();
+        challengeService.updateChallenge(challengeId, createChallengeDTO, email);
+        return ApiResponse.onSuccess(SuccessStatus.UPDATE_SUCCESS, null);
+    }
 
 
 }

@@ -22,7 +22,14 @@ public enum SuccessStatus implements BaseCode {
     UNFOLLOW_SUCCESS(HttpStatus.OK, "USER200", "언팔로우에 성공했습니다."),
     REPORT_SUCCESS(HttpStatus.OK, "USER200", "신고가 완료되었습니다."),
     WITHDRAWAL_SUCCESS(HttpStatus.OK, "USER200", "출금 완료되었습니다."),
-    GET_BADGE_SUCCESS(HttpStatus.OK, "USER200", "뱃지를 획득했습니다.");
+    GET_BADGE_SUCCESS(HttpStatus.OK, "USER200", "뱃지를 획득했습니다."),
+
+    // 챌린지 관련 응답
+    CREATE_SUCCESS(HttpStatus.OK, "CHALLENGE201", "챌린지를 생성했습니다."),
+    UPDATE_SUCCESS(HttpStatus.OK, "CHALLENGE201", "챌린지를 수정했습니다."),
+    DELETE_SUCCESS(HttpStatus.OK, "CHALLENGE201", "챌린지를 삭제했습니다.");
+
+
 
     private final HttpStatus httpStatus;
     private final String code;
