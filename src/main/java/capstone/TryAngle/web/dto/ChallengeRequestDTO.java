@@ -1,10 +1,7 @@
 package capstone.TryAngle.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -12,6 +9,7 @@ import java.time.LocalTime;
 public class ChallengeRequestDTO {
 
     @Getter
+    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
@@ -67,5 +65,10 @@ public class ChallengeRequestDTO {
 
         @JsonProperty("vote_method")
         private String voteMethod;
+
+        public void setChallengeThumbnail(String challengeThumbnail) {
+            this.challengeThumbnail = challengeThumbnail;
+        }
+
     }
 }
