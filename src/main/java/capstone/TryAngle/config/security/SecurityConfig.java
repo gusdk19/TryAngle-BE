@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // 인증 없이 가능한 경우
                         .requestMatchers("/user/login", "/user/signup", "/user/checkEmail", "/user/checkNickname").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/challenge/**").permitAll() // GET 메서드로 /challenge 하위 전부 허용
+                        .requestMatchers(HttpMethod.GET, "/challenge/**", "uploads/**").permitAll() // GET 메서드로 /challenge 하위 전부 허용
 //                        .requestMatchers("/user/*", "/challenge/*").permitAll() // 임시적으로 모두 허용
                         .anyRequest().authenticated()) // 그 외에는 인증 없이 접근 불가
                 // JWT 인증 필터를 UsernamePasswordAuthenticationFilter 이전에 등록
