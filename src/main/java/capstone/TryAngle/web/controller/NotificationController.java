@@ -3,6 +3,7 @@ package capstone.TryAngle.web.controller;
 import capstone.TryAngle.common.ApiResponse;
 import capstone.TryAngle.common.status.SuccessStatus;
 import capstone.TryAngle.service.NotificationService;
+import capstone.TryAngle.web.dto.NotificationRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -25,6 +26,11 @@ public class NotificationController {
     public ApiResponse<?> readNotification(@PathVariable("notificationId") Integer notificationId) {
         notificationService.markAsRead(notificationId);
         return ApiResponse.onSuccess(SuccessStatus.MARK_READ_SUCCESS, null);
+    }
 
+    @PostMapping("/invite/notification")
+    public ApiResponse<?> inviteNotification(@RequestBody NotificationRequestDTO.InviteRequestDTO inviteDto) {
+        notificationService.challengeInviteNotification(inviteDto);
+        return ApiResponse.onSuccess(SuccessStatus.CHALLENGE_NOTI_SUCCESS, null);
     }
 }

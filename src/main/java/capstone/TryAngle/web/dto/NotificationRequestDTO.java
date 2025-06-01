@@ -9,8 +9,10 @@ public class NotificationRequestDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class FollowNotificationDTO {
-        private Integer followerId;
-        private Integer followeeId;
+    public static class InviteRequestDTO {
+        private Integer senderId;
+        private Integer receiverId;
+        private Integer challengeId;
+        private String inviteCode;
     }
 }

@@ -2,11 +2,15 @@ package capstone.TryAngle.service;
 
 import capstone.TryAngle.common.GeneralException;
 import capstone.TryAngle.common.status.ErrorStatus;
+import capstone.TryAngle.model.challenge.Challenge;
 import capstone.TryAngle.model.user.Notification;
+import capstone.TryAngle.model.user.NotificationType;
 import capstone.TryAngle.model.user.User;
+import capstone.TryAngle.repository.ChallengeRepository;
 import capstone.TryAngle.repository.NotificationRepository;
 import capstone.TryAngle.repository.UserRepository;
 import capstone.TryAngle.web.converter.NotificationConverter;
+import capstone.TryAngle.web.dto.NotificationRequestDTO;
 import capstone.TryAngle.web.dto.NotificationResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +26,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
+    private final ChallengeRepository challengeRepository;
 
     private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
@@ -47,5 +52,35 @@ public class NotificationServiceImpl implements NotificationService {
         if (!notification.getIsRead()) {
             notification.markIsRead(true);
         }
+    }
+
+    @Override
+    public void challengeInviteNotification(NotificationRequestDTO.InviteRequestDTO inviteDto) {
+        User sender = userRepository.findById(Long.valueOf(inviteDto.getSenderId()))
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        User receiver = userRepository.findById(Long.valueOf(inviteDto.getReceiverId()))
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Challenge challenge = challengeRepository.findById(inviteDto.getChallengeId())
+                .orElseThrow(() -> new GeneralException(ErrorStatus.CHALLENGE_NOT_FOUND));
+
+        String message = String.format(
+                "%s님이 %s 챌린지에 나를 초대했어요.\n참여 코드는 %s입니다.",
+                sender.getNickname(),
+                challenge.getChallengeName(),
+                inviteDto.getInviteCode()
+        );
+
+        Notification notification = Notification.builder()
+                .sender(sender)
+                .receiver(receiver)
+                .notificationType(NotificationType.CHALLENGE_INVITE)
+                .message(message)
+                .challengeId(challenge.getChallengeId())
+                .isRead(false)
+                .build();
+
+        notificationRepository.save(notification);
     }
 }
