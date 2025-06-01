@@ -1,6 +1,8 @@
 package capstone.TryAngle.model.user;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,6 +15,8 @@ import java.time.LocalDateTime;
 @Table(name = "notification")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Notification {
 
     @Id
@@ -45,17 +49,17 @@ public class Notification {
     @Column(name = "message", nullable = false, length = 100)
     private String message;
 
-    public Notification(NotificationType notificationType, User receiver, User sender,
-                        Integer challengeId, Boolean isRead, String message) {
-        this.notificationType = notificationType;
-        this.receiver = receiver;
-        this.sender = sender;
-        this.challengeId = challengeId;
-        this.isRead = isRead;
-        this.message = message;
-    }
-
     public void markIsRead(Boolean isRead) {
         this.isRead = isRead;
+    }
+
+    public static Notification createFollow(User receiver, User sender, String message, NotificationType notificationType) {
+        return Notification.builder()
+                .notificationType(notificationType)
+                .receiver(receiver)
+                .sender(sender)
+                .message(message)
+                .isRead(false)
+                .build();
     }
 }

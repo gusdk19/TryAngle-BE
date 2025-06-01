@@ -2,10 +2,9 @@ package capstone.TryAngle.service;
 
 import capstone.TryAngle.common.GeneralException;
 import capstone.TryAngle.common.status.ErrorStatus;
-import capstone.TryAngle.model.user.Follow;
-import capstone.TryAngle.model.user.Report;
-import capstone.TryAngle.model.user.User;
+import capstone.TryAngle.model.user.*;
 import capstone.TryAngle.repository.FollowRepository;
+import capstone.TryAngle.repository.NotificationRepository;
 import capstone.TryAngle.repository.ReportRepository;
 import capstone.TryAngle.repository.UserRepository;
 import capstone.TryAngle.web.converter.UserConverter;
@@ -26,6 +25,7 @@ public class UserServiceImpl implements UserService {
     private final FollowRepository followRepository;
     private final AuthService authService;
     private final ReportRepository reportRepository;
+    private final NotificationRepository notificationRepository;
 
     private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
@@ -99,6 +99,15 @@ public class UserServiceImpl implements UserService {
 
         Follow follow = new Follow(follower, followee);
         followRepository.save(follow);
+
+
+        String message = follower.getNickname() + "님이 나를 팔로우 했어요!";
+
+        Notification notification = Notification.createFollow(
+                followee, follower, message, NotificationType.FOLLOW
+        );
+
+        notificationRepository.save(notification);
     }
 
     @Override

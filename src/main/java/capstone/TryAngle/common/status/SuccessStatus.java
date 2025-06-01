@@ -24,6 +24,8 @@ public enum SuccessStatus implements BaseCode {
     WITHDRAWAL_SUCCESS(HttpStatus.OK, "USER200", "출금 완료되었습니다."),
     GET_BADGE_SUCCESS(HttpStatus.OK, "USER200", "뱃지를 획득했습니다."),
     MARK_READ_SUCCESS(HttpStatus.OK, "USER200", "알림을 읽었습니다."),
+    FOLLOW_NOTI_SUCCESS(HttpStatus.OK, "USER200", "팔로우 알림을 보냈습니다."),
+    CHALLENGE_NOTI_SUCCESS(HttpStatus.OK, "USER200", "챌린지 참여 권유 알림을 보냈습니다."),
 
     // 챌린지 관련 응답
     CREATE_SUCCESS(HttpStatus.OK, "CHALLENGE201", "챌린지를 생성했습니다."),
