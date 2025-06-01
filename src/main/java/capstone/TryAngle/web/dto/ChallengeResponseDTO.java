@@ -18,22 +18,22 @@ public class ChallengeResponseDTO {
     @Builder
     public static class getChallengeDTO {
 
-        private Integer challenge_id;
-        private String challenge_name;
-        private String challenge_thumbnail;
-        private String challenge_shortIntro;
+        private Integer challengeId;
+        private String challengeName;
+        private String challengeThumbnail;
+        private String challengeShortIntro;
         private Category category;
-        private boolean challenge_public;
-        private LocalDate start_date;
-        private LocalDate end_date;
-        private LocalTime auth_time_start;
-        private LocalTime auth_time_end;
-        private Integer max_people;
-        private Integer now_people;
-        private Integer min_deposit;
-        private boolean return_type;
-        private String auth_frequency;
-        private String leader_nickname;
+        private boolean challengePublic;
+        private LocalDate startDate;
+        private LocalDate endDate;
+        private LocalTime authTimeStart;
+        private LocalTime authTimeEnd;
+        private Integer maxPeople;
+        private Integer nowPeople;
+        private Integer minDeposit;
+        private boolean returnType;
+        private String authFrequency;
+        private String leaderNickname;
     }
 
     @Getter
@@ -42,23 +42,23 @@ public class ChallengeResponseDTO {
     @Builder
     public static class getMyChallengeDTO {
 
-        private Integer challenge_id;
-        private String challenge_name;
-        private String challenge_thumbnail;
-        private String challenge_shortIntro;
+        private Integer challengeId;
+        private String challengeName;
+        private String challengeThumbnail;
+        private String challengeShortIntro;
         private Category category;
-        private boolean challenge_public;
-        private LocalDate start_date;
-        private LocalDate end_date;
-        private LocalTime auth_time_start;
-        private LocalTime auth_time_end;
-        private Integer max_people;
-        private Integer now_people;
-        private Integer min_deposit;
-        private boolean return_type;
-        private String auth_frequency;
-        private boolean is_leader;
-        private boolean participation_success;
+        private boolean challengePublic;
+        private LocalDate startDate;
+        private LocalDate endDate;
+        private LocalTime authTimeStart;
+        private LocalTime authTimeEnd;
+        private Integer maxPeople;
+        private Integer nowPeople;
+        private Integer minDeposit;
+        private boolean returnType;
+        private String authFrequency;
+        private boolean isLeader;
+        private boolean participationSuccess;
 
     }
 

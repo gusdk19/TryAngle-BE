@@ -92,4 +92,42 @@ public class Challenge {
     @Column(name="created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    public void updateChallenge(
+            String name,
+            String thumbnail,
+            String shortIntro,
+            String description,
+            Category category,
+            Boolean isPublic,
+            LocalDate startDate,
+            LocalDate endDate,
+            LocalTime authStart,
+            LocalTime authEnd,
+            Integer maxPeople,
+            Integer minDeposit,
+            Boolean returnType,
+            String authFrequency,
+            String depositMethod,
+            String authMethod,
+            String voteMethod
+    ) {
+        this.challengeName = name;
+        this.challengeThumbnail = thumbnail;
+        this.challengeShortIntro = shortIntro;
+        this.challengeDescription = description;
+        this.category = category;
+        this.challengePublic = isPublic;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.authTimeStart = authStart;
+        this.authTimeEnd = authEnd;
+        this.maxPeople = maxPeople;
+        this.minDeposit = minDeposit;
+        this.returnType = returnType;
+        this.authFrequency = authFrequency;
+        this.depositManageMethod = depositMethod;
+        this.authMethod = authMethod;
+        this.voteMethod = voteMethod;
+    }
+
 }
