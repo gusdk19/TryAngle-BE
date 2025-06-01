@@ -52,4 +52,15 @@ public class UserResponseDTO {
         private String profileImage;
         private Boolean isFollowing;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class UserBadgesDTO {
+        private Integer badgeId;
+        private String badgeName;
+        private String description;
+        private String unlockCondition;
+        private Boolean isVisible;
+        private String image;
+    }
 }

@@ -2,7 +2,7 @@ package capstone.TryAngle.model.challenge;
 
 public enum Category {
     STUDY,
-    WORKOUT,
+    HEALTH,
     LIFE,
     HOBBY,
     ETC

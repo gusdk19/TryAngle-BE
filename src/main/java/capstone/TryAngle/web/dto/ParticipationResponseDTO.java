@@ -15,7 +15,7 @@ public class ParticipationResponseDTO {
     @Builder
     public static class getParticipationDTO {
 
-        private Integer challenge_id;
+        private Integer challengeId;
         private Integer status;
         private Boolean participationSuccess;
         private Integer depositAmount;
@@ -23,7 +23,7 @@ public class ParticipationResponseDTO {
         private LocalDateTime createdAt;
 
         private boolean authStatus;
-        private boolean auth_vote_status;
+        private boolean authVoteStatus;
     }
 
 

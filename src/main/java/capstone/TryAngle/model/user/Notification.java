@@ -25,11 +25,11 @@ public class Notification {
     private NotificationType notificationType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "receiver", nullable = false)
+    @JoinColumn(name = "receiver_id", nullable = false)
     private User receiver;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sender", nullable = false)
+    @JoinColumn(name = "sender_id", nullable = false)
     private User sender;
 
     @Column(name = "challenge_id")
@@ -53,5 +53,9 @@ public class Notification {
         this.challengeId = challengeId;
         this.isRead = isRead;
         this.message = message;
+    }
+
+    public void markIsRead(Boolean isRead) {
+        this.isRead = isRead;
     }
 }

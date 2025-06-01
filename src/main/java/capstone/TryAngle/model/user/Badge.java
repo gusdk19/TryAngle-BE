@@ -15,6 +15,9 @@ public class Badge {
     @Column(name = "badge_id")
     private Integer badgeId;
 
+    @Column(name = "badge_name", nullable = false, length = 50)
+    private String badgeName;
+
     @Column(name = "badge_image", nullable = false, length = 300)
     private String badgeImage;
 
@@ -24,8 +27,9 @@ public class Badge {
     @Column(name = "unlock_condition", nullable = false, length = 100)
     private String unlockCondition;
 
-    public Badge(String badgeImage, String badgeDescription, String unlockCondition) {
+    public Badge(String badgeImage, String badgeName, String badgeDescription, String unlockCondition) {
         this.badgeImage = badgeImage;
+        this.badgeName = badgeName;
         this.badgeDescription = badgeDescription;
         this.unlockCondition = unlockCondition;
     }

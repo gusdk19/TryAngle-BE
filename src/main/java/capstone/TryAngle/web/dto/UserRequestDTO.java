@@ -59,4 +59,9 @@ public class UserRequestDTO {
     public static class WithdrawalDTO {
         private Integer amount;
     }
+
+    @Getter
+    public static class getBadgeDTO {
+        private Integer badgeId;
+    }
 }
