@@ -100,6 +100,7 @@ public class UserServiceImpl implements UserService {
         Follow follow = new Follow(follower, followee);
         followRepository.save(follow);
 
+        // 그럼 이것도 이제 추적이 안되나? ㅠㅠ
 
         String message = follower.getNickname() + "님이 나를 팔로우 했어요!";
 
