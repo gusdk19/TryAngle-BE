@@ -159,6 +159,9 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = findUserByEmail(email);
+        if (user.getReturnMoney() < amount) {
+            throw new GeneralException(ErrorStatus.EXCEEDS_RETURN_MONEY);
+        }
         user.withdrawal(amount);
     }
 }

@@ -30,6 +30,7 @@ ErrorStatus implements BaseErrorCode {
     NOT_FOLLOWING(HttpStatus.NOT_FOUND, "USER4004", "팔로잉 하고 있지 않습니다."),
     CANNOT_REPORT_SELF(HttpStatus.CONFLICT, "USER4009", "내 닉네임은 신고할 수 없습니다."),
     INVALID_WITHDRAWAL_MONEY(HttpStatus.BAD_REQUEST, "USER4000", "출금은 5000원 이상, 1000원 단위로 가능합니다."),
+    EXCEEDS_RETURN_MONEY(HttpStatus.BAD_REQUEST, "USER4000", "현재 환급금 초과 금액은 출금이 불가능합니다."),
 
     // 챌린지 관련 응답
     CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND, "CHALLENGE404", "챌린지 정보가 존재하지 않습니다"),
