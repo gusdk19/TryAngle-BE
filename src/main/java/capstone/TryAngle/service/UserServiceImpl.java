@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService {
     public void deleteAccount(String email) {
         User user = findUserByEmail(email);
 
-        // 알림 삭제: 수신자/발신자 기준 모두 삭제
+        // 알림 삭제: 수신자/발신자 기준 모두 삭제 (cascade)
         notificationRepository.deleteByReceiver(user);
         notificationRepository.deleteBySender(user);
 
