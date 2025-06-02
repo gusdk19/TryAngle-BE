@@ -130,4 +130,11 @@ public class Challenge {
         this.voteMethod = voteMethod;
     }
 
+    public void setNowPeople(int i) {
+        this.nowPeople = i;
+    }
+
+    public void setInviteCode(String code){
+        this.inviteCode = code;
+    }
 }

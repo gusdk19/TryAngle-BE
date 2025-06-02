@@ -71,4 +71,44 @@ public class ChallengeRequestDTO {
         }
 
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class joinChallengeDTO {
+        private Integer challengeId;
+        private Integer deposit;
+        private String inviteCode;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class endChallengeDTO {
+        private Integer challengeId;
+        private Integer deposit;
+        private Integer returnType;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class LeaderJoinDTO {
+        private Integer deposit;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class createInviteCodeDTO {
+        @JsonProperty("invite_code")
+        private String inviteCode;
+        @JsonProperty("challenge_id")
+        private Integer challengeId;
+
+    }
 }

@@ -1,10 +1,6 @@
 package capstone.TryAngle.web.converter;
 
-import capstone.TryAngle.model.challenge.Authentication;
-import capstone.TryAngle.model.challenge.Challenge;
 import capstone.TryAngle.model.challenge.Participation;
-import capstone.TryAngle.model.challenge.Vote;
-import capstone.TryAngle.web.dto.ChallengeResponseDTO;
 import capstone.TryAngle.web.dto.ParticipationResponseDTO;
 
 public class ParticipationConverter {

@@ -17,7 +17,13 @@ public interface ChallengeService {
 
     void deleteChallenge(Integer challengeId, String email);
 
-    void createChallenge(ChallengeRequestDTO.createChallengeDTO createChallengeDTO, String email);
+    void createChallenge(ChallengeRequestDTO.createChallengeDTO createChallengeDTO, String email, Integer deposit);
 
     void updateChallenge(Integer challengeId, ChallengeRequestDTO.createChallengeDTO createChallengeDTO, String email);
+
+    void joinChallenge(Integer challengeId, Integer deposit, String inviteCode, String email);
+
+    void endChallenge(Integer challengeId);
+
+    ChallengeResponseDTO.createInviteCodeDTO createInviteCode(String inviteCode, Integer challengeId, String email);
 }

@@ -57,4 +57,19 @@ public class Participation {
         this.depositAmount = deposit_amount;
         this.depositStatus = deposit_status;
     }
+
+    public void markAsCompleted() {
+        this.status = 2;
+    }
+
+    public void returnDeposit(Boolean isDonation) {
+        if (isDonation) {
+            this.depositStatus = 1;  // donated
+        } else {
+            this.depositStatus = 0;  // refunded
+            this.depositReturnDate = LocalDate.now();
+        }
+    }
+
+
 }

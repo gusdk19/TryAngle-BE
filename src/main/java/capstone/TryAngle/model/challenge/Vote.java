@@ -28,7 +28,7 @@ public class Vote {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="auth_id", nullable = false)
-    private Authentication authentication;
+    private Auth auth;
 
 
     @Enumerated(EnumType.STRING)
@@ -42,9 +42,9 @@ public class Vote {
     @Column(name="created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    public Vote(User user, Authentication authentication, Reaction reaction, Boolean vote_type) {
+    public Vote(User user, Auth auth, Reaction reaction, Boolean vote_type) {
         this.user = user;
-        this.authentication = authentication;
+        this.auth = auth;
         this.reaction = reaction;
         this.voteType = vote_type;
     }

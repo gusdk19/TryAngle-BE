@@ -62,4 +62,12 @@ public class ChallengeResponseDTO {
 
     }
 
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class createInviteCodeDTO{
+        private String inviteCode;
+    }
+
 }

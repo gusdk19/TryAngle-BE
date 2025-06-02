@@ -3,9 +3,14 @@ package capstone.TryAngle.service;
 import capstone.TryAngle.common.GeneralException;
 import capstone.TryAngle.common.status.ErrorStatus;
 import capstone.TryAngle.config.security.TokenProvider;
+import capstone.TryAngle.model.challenge.Participation;
 import capstone.TryAngle.model.user.User;
+import capstone.TryAngle.model.challenge.Auth;
+import capstone.TryAngle.repository.AuthRepository;
+import capstone.TryAngle.repository.ParticipationRepository;
 import capstone.TryAngle.repository.UserRepository;
 import capstone.TryAngle.web.converter.UserConverter;
+import capstone.TryAngle.web.dto.AuthRequestDTO;
 import capstone.TryAngle.web.dto.UserRequestDTO;
 import capstone.TryAngle.web.dto.UserResponseDTO;
 import jakarta.transaction.Transactional;
@@ -26,6 +31,8 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final ParticipationRepository participationRepository;
+    private final AuthRepository authRepository;
 
     @Override
     public void validateEmail(String email) {
@@ -75,5 +82,28 @@ public class AuthServiceImpl implements AuthService {
 
         String token = tokenProvider.createToken(authentication);
         return new UserResponseDTO.LoginResponseDTO(token);
+    }
+
+    @Override
+    public void createAuth(String email, AuthRequestDTO.createAuthDTO createAuthDTO) {
+
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+
+        Participation participation = participationRepository.findByUserUserIdAndChallengeChallengeId(user.getUserId(), createAuthDTO.getChallengeId());
+        if (participation == null) {
+            throw new GeneralException(ErrorStatus.NOT_PARTICIPATING);
+        }
+        Auth auth = new Auth(
+                participation,
+                createAuthDTO.getAuthImage(),
+                createAuthDTO.getComment()
+        );
+
+
+
+        authRepository.save(auth);
     }
 }

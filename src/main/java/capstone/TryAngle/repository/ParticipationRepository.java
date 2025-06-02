@@ -12,4 +12,8 @@ public interface ParticipationRepository extends JpaRepository<Participation, In
     List<Participation> findAllByUserUserId(Integer userId);
 
     Participation findByUserUserIdAndChallengeChallengeId(Integer userId, Integer challengeId);
+
+    boolean existsByUserUserIdAndChallengeChallengeId(Integer userId, Integer challengeId);
+
+    List<Participation> findAllByChallengeChallengeId(Integer challengeId);
 }

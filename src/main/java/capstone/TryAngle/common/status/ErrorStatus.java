@@ -35,9 +35,15 @@ ErrorStatus implements BaseErrorCode {
     // 챌린지 관련 응답
     CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND, "CHALLENGE404", "챌린지 정보가 존재하지 않습니다"),
     NOT_LEADER(HttpStatus.CONFLICT, "CHALLENGE4009", "리더가 아닙니다."),
+    CHALLENGE_PUBLIC(HttpStatus.CONFLICT, "CHALLENGE4009", "공개 챌린지입니다. 초대코드가 필요 없습니다."),
 
     // 참여 관련 응답
-    PARTICIPATION_NOT_FOUND(HttpStatus.NOT_FOUND, "PARTICIPATION404" ,"해당 챌린지에 해당 유저가 참여한 정보가 없습니다." );
+    PARTICIPATION_NOT_FOUND(HttpStatus.NOT_FOUND, "PARTICIPATION404" ,"해당 챌린지에 해당 유저가 참여한 정보가 없습니다." ),
+    ALREADY_PARTICIPATED(HttpStatus.CONFLICT, "PARTICIPATION409", "이미 참여한 챌린지 입니다." ),
+    CHALLENGE_FULL(HttpStatus.CONFLICT, "PARTICIPATION409", "참여 인원이 모두 찼습니다." ),
+    DEPOSIT_TOO_SMALL(HttpStatus.CONFLICT, "PARTICIPATION409", "예치금이 최소 조건보다 작습니다."),
+    INVALID_INVITE_CODE(HttpStatus.CONFLICT, "PARTICIPATION409" , "잘못된 초대 코드 입니다." ),
+    NOT_PARTICIPATING(HttpStatus.CONFLICT, "PARTICIPATION409" , "해당 챌린지에 참여하지 않은 유저입니다. 인증을 추가할 수 없습니다.");
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
