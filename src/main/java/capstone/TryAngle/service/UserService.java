@@ -16,4 +16,5 @@ public interface UserService {
     List<UserResponseDTO.AllUsersDTO> getAllUsers(String email);
     void report(String email, UserRequestDTO.ReportRequestDTO reportDTO);
     void withdrawal(String email, Integer amount);
+    void deleteAccount(String email);
 }
