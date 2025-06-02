@@ -1,6 +1,7 @@
 package capstone.TryAngle.model.challenge;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -9,11 +10,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="authentication")
+@Table(name="auth")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Authentication {
+public class Auth {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,9 +38,12 @@ public class Authentication {
     @Column(name="created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    public Authentication(String authImage, String comment, Boolean authSuccess) {
+
+    public Auth(Participation participation, String authImage, String comment) {
+        this.participation = participation;
         this.authImage = authImage;
         this.comment = comment;
-        this.authSuccess = authSuccess;
+        this.authSuccess = false;
+        this.createdAt = LocalDateTime.now();
     }
 }

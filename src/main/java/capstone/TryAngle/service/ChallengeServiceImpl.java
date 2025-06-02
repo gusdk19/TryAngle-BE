@@ -1,19 +1,19 @@
 package capstone.TryAngle.service;
 
 import capstone.TryAngle.common.GeneralException;
-import capstone.TryAngle.model.challenge.Authentication;
+import capstone.TryAngle.model.challenge.Auth;
 import capstone.TryAngle.model.challenge.Category;
 import capstone.TryAngle.model.challenge.Challenge;
 import capstone.TryAngle.model.challenge.Participation;
 import capstone.TryAngle.model.user.User;
 import capstone.TryAngle.repository.*;
 import capstone.TryAngle.web.converter.ChallengeConverter;
-import capstone.TryAngle.web.converter.ParticipationConverter;
 import capstone.TryAngle.web.dto.ChallengeRequestDTO;
 import capstone.TryAngle.web.dto.ChallengeResponseDTO;
 import capstone.TryAngle.common.status.ErrorStatus;
 import capstone.TryAngle.web.dto.ParticipationResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +30,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final ParticipationRepository participationRepository;
     private final UserRepository userRepository;
-    private final AuthenticationRepository authenticationRepository;
+    private final AuthRepository authRepository;
     private final VoteRepository voteRepository;
 
     @Override
@@ -74,14 +74,14 @@ public class ChallengeServiceImpl implements ChallengeService {
         LocalDateTime endOfDay = startOfDay.plusDays(1);
 
         // 오늘 인증 여부
-        boolean authStatus = authenticationRepository.existsByParticipationParticipationIdAndCreatedAtBetween(
+        boolean authStatus = authRepository.existsByParticipationParticipationIdAndCreatedAtBetween(
                 participationId,
                 startOfDay,
                 endOfDay
         );
 
         // 오늘 인증 중 가장 최근 것의 인증 ID로 투표 수 확인
-        List<Authentication> todayAuths = authenticationRepository.findByParticipationParticipationIdAndCreatedAtBetween(
+        List<Auth> todayAuths = authRepository.findByParticipationParticipationIdAndCreatedAtBetween(
                 participationId,
                 startOfDay,
                 endOfDay
@@ -89,8 +89,8 @@ public class ChallengeServiceImpl implements ChallengeService {
 
         boolean authVoteStatus = false;
         if (!todayAuths.isEmpty()) {
-            Authentication todayAuth = todayAuths.get(0); // 가장 최근 인증 하나 기준
-            int voteCount = voteRepository.countByAuthenticationAuthenticationIdAndCreatedAtBetween(
+            Auth todayAuth = todayAuths.get(0); // 가장 최근 인증 하나 기준
+            int voteCount = voteRepository.countByAuthAuthenticationIdAndCreatedAtBetween(
                     todayAuth.getAuthenticationId(),
                     startOfDay,
                     endOfDay
@@ -139,15 +139,15 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
-    public void createChallenge(ChallengeRequestDTO.createChallengeDTO createChallengeDTO, String email) {
+    public void createChallenge(ChallengeRequestDTO.createChallengeDTO createChallengeDTO, String email, Integer deposit) {
 
         User leader = userRepository.findByEmail(email)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
 
-        String inviteCode = null;
-        if (!createChallengeDTO.getChallengePublic()) {
-            inviteCode = generateInviteCode(6);  // 비공개 챌린지일 경우에만 생성
-        }
+//        String inviteCode = null;
+//        if (!createChallengeDTO.getChallengePublic()) {
+//            inviteCode = generateInviteCode(6);  // 비공개 챌린지일 경우에만 생성
+//        }
 
         Challenge challenge = new Challenge(
                 null,
@@ -167,7 +167,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                 createChallengeDTO.getMinDeposit(),
                 createChallengeDTO.getReturnType(),
                 createChallengeDTO.getAuthFrequency(),
-                inviteCode, // invite_code
+                null, // invite_code
                 createChallengeDTO.getDepositManageMethod(),
                 createChallengeDTO.getAuthMethod(),
                 createChallengeDTO.getVoteMethod(),
@@ -175,6 +175,28 @@ public class ChallengeServiceImpl implements ChallengeService {
         );
 
         challengeRepository.save(challenge);
+
+        // 최소 예치금 조건
+        if (deposit < createChallengeDTO.getMinDeposit()) {
+            throw new GeneralException(ErrorStatus.DEPOSIT_TOO_SMALL);
+        }
+
+        // 참여 객체 생성
+        Participation participation = new Participation(
+                leader,
+                challenge,
+                0, // (ready, progress, completed)
+                false,
+                deposit,
+                2 // (refunded, donated, not_refunded_yet)
+
+        );
+        participationRepository.save(participation);
+
+        // 유저 현재 예치금 추가
+        Integer currentChallengeMoney  = leader.getChallengeMoney();
+        leader.updateChallengeMoney(currentChallengeMoney+deposit);
+
     }
 
     @Override
@@ -210,6 +232,130 @@ public class ChallengeServiceImpl implements ChallengeService {
                 dto.getAuthMethod(),
                 dto.getVoteMethod()
         );
+    }
+
+    @Override
+    public void joinChallenge(Integer challengeId, Integer deposit, String inviteCode, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.CHALLENGE_NOT_FOUND));
+
+        // 비공개 챌린지라면 초대 코드
+        if (!challenge.getChallengePublic()) {
+            if (inviteCode == null || !inviteCode.equals(challenge.getInviteCode())) {
+                throw new GeneralException(ErrorStatus.INVALID_INVITE_CODE);
+            }
+        }
+
+        // 중복 참여 방지
+        boolean alreadyJoined = participationRepository.existsByUserUserIdAndChallengeChallengeId(
+                user.getUserId(), challengeId
+        );
+        if (alreadyJoined) {
+            throw new GeneralException(ErrorStatus.ALREADY_PARTICIPATED);
+        }
+
+        // 참여 인원 제한
+        if (challenge.getNowPeople() != null && challenge.getNowPeople() >= challenge.getMaxPeople()) {
+            throw new GeneralException(ErrorStatus.CHALLENGE_FULL);
+        }
+
+        // 최소 예치금 조건
+        if (deposit < challenge.getMinDeposit()) {
+            throw new GeneralException(ErrorStatus.DEPOSIT_TOO_SMALL);
+        }
+
+        // 참여 상태 결정
+        int status = challenge.getStartDate().isAfter(LocalDate.now()) ? 0 : 1;
+
+
+        // 참여 객체 생성
+        Participation participation = new Participation(
+                user,
+                challenge,
+                status, // (ready, progress, completed)
+                false,
+                deposit,
+                2 // (refunded, donated, not_refunded_yet)
+
+        );
+        participationRepository.save(participation);
+
+        // 현재 인원 수 증가
+        Integer currentPeople = challenge.getNowPeople() != null ? challenge.getNowPeople() : 0;
+        challenge.setNowPeople(currentPeople + 1);
+        challengeRepository.save(challenge);
+
+        // 유저 현재 예치금 추가
+        Integer currentChallengeMoney  = user.getChallengeMoney();
+        user.updateChallengeMoney(currentChallengeMoney+deposit);
+    }
+
+
+    @Scheduled(cron = "0 0 0 * * *") // 매일 자정
+    public void autoEndChallenges() {
+        List<Challenge> endingChallenges = challengeRepository
+                .findAllByEndDate(LocalDate.now());
+
+        for (Challenge challenge : endingChallenges) {
+            endChallenge(challenge.getChallengeId());
+        }
+    }
+
+    @Override
+    public void endChallenge(Integer challengeId) {
+
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.CHALLENGE_NOT_FOUND));
+        Boolean isDonation = challenge.getReturnType();  // true: 기부, false: 환급
+
+        List<Participation> participations = participationRepository
+                .findAllByChallengeChallengeId(challengeId);
+
+        for (Participation participation : participations) {
+            // 상태 종료로 변경
+            participation.markAsCompleted();
+
+            // 성공한 경우만 처리
+            if (Boolean.TRUE.equals(participation.getParticipationSuccess())) {
+                int depositAmount = participation.getDepositAmount();
+                User participant = participation.getUser();
+
+                // 입금 상태 처리 (donated / refunded)
+                participation.returnDeposit(isDonation);
+
+                if (!isDonation) {
+                    // 환급인 경우만 돈 처리
+                    participant.updateChallengeMoney(participant.getChallengeMoney() - depositAmount);
+                    participant.updateReturnMoney(depositAmount); // returnMoney += depositAmount
+                }
+            }
+        }
+    }
+
+    @Override
+    public ChallengeResponseDTO.createInviteCodeDTO createInviteCode(String inviteCode, Integer challengeId, String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.CHALLENGE_NOT_FOUND));
+
+        // 리더 아니면
+        if (!challenge.getLeader().getUserId().equals(user.getUserId())){
+            throw new GeneralException(ErrorStatus.NOT_LEADER);
+        }
+
+        // 공개 챌린지면
+        if (Boolean.TRUE.equals(challenge.getChallengePublic())){
+            throw new GeneralException(ErrorStatus.CHALLENGE_PUBLIC);
+        }
+        challenge.setInviteCode(inviteCode);
+        return ChallengeResponseDTO.createInviteCodeDTO.builder().inviteCode(inviteCode)
+                .build();
     }
 
 

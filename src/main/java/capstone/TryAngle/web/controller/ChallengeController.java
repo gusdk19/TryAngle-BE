@@ -4,8 +4,6 @@ import capstone.TryAngle.common.ApiResponse;
 import capstone.TryAngle.common.status.SuccessStatus;
 import capstone.TryAngle.service.ChallengeService;
 import capstone.TryAngle.web.dto.ChallengeRequestDTO;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -66,27 +65,33 @@ public class ChallengeController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse createChallenge(  @RequestPart("challengeData") ChallengeRequestDTO.createChallengeDTO createChallengeDTO,
                                          @RequestPart(value = "thumbnailImage", required = false) MultipartFile imageFile,
+                                         @RequestPart("leaderJoinData") ChallengeRequestDTO.LeaderJoinDTO leaderJoinData,
                                          @AuthenticationPrincipal User loginUser)
     {
         String email = loginUser.getUsername();
+        Integer deposit = leaderJoinData.getDeposit();
         // 이미지가 있는 경우만 저장
-        if (imageFile != null && !imageFile.isEmpty()) {
+        if (imageFile != null && !imageFile.isEmpty() && imageFile.getSize() > 0) {
             try {
                 String fileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
                 Path uploadPath = Paths.get("uploads", fileName);
                 Files.createDirectories(uploadPath.getParent());
-                Files.copy(imageFile.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
 
-                String imageUrl = "http://localhost:8080/uploads/" + fileName;
-                createChallengeDTO.setChallengeThumbnail(imageUrl);
+                // 스트림을 열고, 빈 스트림이면 복사하지 않음
+                try (InputStream inputStream = imageFile.getInputStream()) {
+                    if (inputStream.available() > 0) {
+                        Files.copy(inputStream, uploadPath, StandardCopyOption.REPLACE_EXISTING);
+                        String imageUrl = "http://localhost:8080/uploads/" + fileName;
+                        createChallengeDTO.setChallengeThumbnail(imageUrl);
+                    } else {
+                        createChallengeDTO.setChallengeThumbnail(null);
+                    }
+                }
             } catch (IOException e) {
                 throw new RuntimeException("이미지 업로드 실패", e);
             }
-        } else {
-            createChallengeDTO.setChallengeThumbnail(null);
         }
-
-        challengeService.createChallenge(createChallengeDTO, email);
+        challengeService.createChallenge(createChallengeDTO, email, deposit);
         return ApiResponse.onSuccess(SuccessStatus.CREATE_SUCCESS, null);
     }
 
@@ -118,6 +123,31 @@ public class ChallengeController {
         return ApiResponse.onSuccess(SuccessStatus.UPDATE_SUCCESS, null);
     }
 
+    // 챌린지 참여 & 예치금 입금
+    @PostMapping("/join")
+    public ApiResponse<?> joinChallenge(@RequestBody ChallengeRequestDTO.joinChallengeDTO joinChallengeDTO,
+                                        @AuthenticationPrincipal User loginUser) {
+        String email = loginUser.getUsername();
+        challengeService.joinChallenge(joinChallengeDTO.getChallengeId(), joinChallengeDTO.getDeposit(), joinChallengeDTO.getInviteCode(), email);
+        return ApiResponse.onSuccess(SuccessStatus.JOIN_SUCCESS, null);
+    }
+
+
+    // 챌린지 완료 & 예치금 반환 -> 스케쥴링 돌립니다
+//    @PostMapping("/end/{challengeId}")
+//    public ApiResponse<?> endChallenge(  @PathVariable Integer challengeId) {
+//        challengeService.endChallenge(challengeId);
+//        return ApiResponse.onSuccess(SuccessStatus.END_SUCCESS, null);
+//    }
+
+    // 초대코드 생성
+    @PostMapping("/invite")
+    public ApiResponse<?> createInviteCode(@RequestBody ChallengeRequestDTO.createInviteCodeDTO createInviteCodeDTO, @AuthenticationPrincipal User loginUser){
+        String email = loginUser.getUsername();
+
+        return ApiResponse.onSuccess(SuccessStatus.CREATE_SUCCESS,  challengeService.createInviteCode(createInviteCodeDTO.getInviteCode(), createInviteCodeDTO.getChallengeId(), email));
+
+    }
 
 
 }

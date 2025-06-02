@@ -92,4 +92,12 @@ public class User {
     public void withdrawal(int amount) {
         this.returnMoney -= amount;
     }
+
+    public void updateChallengeMoney(int amount) {
+        this.challengeMoney = amount;
+    }
+
+    public void updateReturnMoney(int amount){
+        this.returnMoney = amount;
+    }
 }
