@@ -18,5 +18,5 @@ public interface UserService {
     void report(String email, UserRequestDTO.ReportRequestDTO reportDTO);
     void withdrawal(String email, Integer amount);
     void deleteAccount(String email);
-    String findId(UserRequestDTO.FindIdDTO findIdDTO);
+    UserResponseDTO.FindIdResponseDTO findId(UserRequestDTO.FindIdDTO findIdDTO);
 }
