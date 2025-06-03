@@ -70,4 +70,9 @@ public class UserRequestDTO {
         private String name;
         private String phone;
     }
+
+    @Getter
+    public static class PasswordResetDTO {
+        private String email;
+    }
 }
