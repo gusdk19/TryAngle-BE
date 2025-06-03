@@ -47,7 +47,7 @@ public class SecurityConfig {
                 // HttpServletRequest를 사용하는 요청들에 대해 접근제한 설정
                 .authorizeHttpRequests(auth -> auth
                         // 인증 없이 가능한 경우
-                        .requestMatchers("/user/login", "/user/signup", "/user/checkEmail", "/user/checkNickname").permitAll()
+                        .requestMatchers("/user/login", "/user/signup", "/user/checkEmail", "/user/checkNickname", "/user/findId").permitAll()
                         .requestMatchers(HttpMethod.GET, "/challenge/**", "uploads/**").permitAll() // GET 메서드로 /challenge 하위 전부 허용
 //                        .requestMatchers("/user/*", "/challenge/*").permitAll() // 임시적으로 모두 허용
                         .anyRequest().authenticated()) // 그 외에는 인증 없이 접근 불가

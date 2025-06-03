@@ -64,4 +64,10 @@ public class UserRequestDTO {
     public static class getBadgeDTO {
         private Integer badgeId;
     }
+
+    @Getter
+    public static class FindIdDTO {
+        private String name;
+        private String phone;
+    }
 }
