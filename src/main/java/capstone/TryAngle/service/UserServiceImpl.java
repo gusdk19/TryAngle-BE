@@ -172,4 +172,16 @@ public class UserServiceImpl implements UserService {
         }
         user.withdrawal(amount);
     }
+
+    @Override
+    public void deleteAccount(String email) {
+        User user = findUserByEmail(email);
+
+        // 알림 삭제: 수신자/발신자 기준 모두 삭제 (cascade)
+        notificationRepository.deleteByReceiver(user);
+        notificationRepository.deleteBySender(user);
+
+        // 유저 삭제
+        userRepository.delete(user);
+    }
 }
