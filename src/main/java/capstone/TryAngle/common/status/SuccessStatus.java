@@ -27,6 +27,7 @@ public enum SuccessStatus implements BaseCode {
     FOLLOW_NOTIFICATION_SUCCESS(HttpStatus.OK, "USER200", "팔로우 알림을 보냈습니다."),
     CHALLENGE_NOTIFICATION_SUCCESS(HttpStatus.OK, "USER200", "챌린지 참여 권유 알림을 보냈습니다."),
     USER_ACCOUNT_DELETED(HttpStatus.OK, "USER200", "탈퇴가 완료되었습니다."),
+    RESET_PASSWORD(HttpStatus.OK, "USER200", "임시 비밀번호가 이메일로 전송되었습니다."),
 
     // 챌린지 관련 응답
     CREATE_SUCCESS(HttpStatus.OK, "CHALLENGE201", "챌린지를 생성했습니다."),

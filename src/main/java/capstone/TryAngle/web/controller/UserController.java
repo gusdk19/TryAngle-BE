@@ -52,4 +52,9 @@ public class UserController {
         return ApiResponse.onSuccess(SuccessStatus.REPORT_SUCCESS, null);
     }
 
+    @PostMapping("/findId")
+    public ApiResponse<?> findId(@RequestBody UserRequestDTO.FindIdDTO findIdDTO) {
+        return ApiResponse.onSuccess(SuccessStatus._OK, userService.findId(findIdDTO));
+    }
+
 }

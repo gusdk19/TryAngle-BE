@@ -184,4 +184,18 @@ public class UserServiceImpl implements UserService {
         // 유저 삭제
         userRepository.delete(user);
     }
+
+    @Override
+    public UserResponseDTO.FindIdResponseDTO findId(UserRequestDTO.FindIdDTO findIdDTO) {
+        String name = findIdDTO.getName();
+        String phone = findIdDTO.getPhone();
+
+        if (name == null || name.isBlank() || phone == null || phone.isBlank()) {
+            throw new GeneralException(ErrorStatus.MISSING_REQUIRED_VALUE);
+        }
+        User user = userRepository.findByNameAndPhone(name, phone)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        return new UserResponseDTO.FindIdResponseDTO(user.getEmail());
+    }
 }

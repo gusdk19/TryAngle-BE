@@ -1,10 +1,7 @@
 package capstone.TryAngle.model.user;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +22,7 @@ public class User {
     @Column(nullable = false, length = 50, unique = true)
     private String email;
 
+    @Setter
     @Column(nullable = false, length = 200)
     private String password;
 
@@ -100,4 +98,5 @@ public class User {
     public void updateReturnMoney(int amount){
         this.returnMoney = amount;
     }
+
 }

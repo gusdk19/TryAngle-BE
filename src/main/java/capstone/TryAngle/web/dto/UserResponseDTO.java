@@ -63,4 +63,10 @@ public class UserResponseDTO {
         private Boolean isVisible;
         private String image;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class FindIdResponseDTO {
+        private String email;
+    }
 }

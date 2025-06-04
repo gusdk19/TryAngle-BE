@@ -4,6 +4,7 @@ import capstone.TryAngle.web.dto.UserRequestDTO;
 import capstone.TryAngle.web.dto.UserResponseDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     UserResponseDTO.MypageDTO getMypageByEmail(String email);
@@ -17,4 +18,5 @@ public interface UserService {
     void report(String email, UserRequestDTO.ReportRequestDTO reportDTO);
     void withdrawal(String email, Integer amount);
     void deleteAccount(String email);
+    UserResponseDTO.FindIdResponseDTO findId(UserRequestDTO.FindIdDTO findIdDTO);
 }
