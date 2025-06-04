@@ -106,4 +106,27 @@ public class AuthServiceImpl implements AuthService {
 
         authRepository.save(auth);
     }
+
+    @Override
+    public void editAuth(Integer authenticationId, String email, AuthRequestDTO.editAuthDTO editAuthDTO) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Auth auth = authRepository.findById(authenticationId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.AUTH_NOT_FOUND));
+
+        // 본인 인증인지 확인
+        if (!auth.getParticipation().getUser().getUserId().equals(user.getUserId())) {
+            throw new GeneralException(ErrorStatus._UNAUTHORIZED);
+        }
+
+        // 수정 필드 적용
+        if (editAuthDTO.getAuthImage() != null) {
+            auth.setAuthImage(editAuthDTO.getAuthImage());
+        }
+
+        if (editAuthDTO.getComment() != null) {
+            auth.setComment(editAuthDTO.getComment());
+        }
+    }
 }

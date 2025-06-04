@@ -11,4 +11,6 @@ public interface AuthService {
     UserResponseDTO.LoginResponseDTO login(String email, String rawPassword);
 
     void createAuth(String email, AuthRequestDTO.createAuthDTO createAuthDTO);
+
+    void editAuth(Integer authenticationId, String email, AuthRequestDTO.editAuthDTO editAuthDTO);
 }
