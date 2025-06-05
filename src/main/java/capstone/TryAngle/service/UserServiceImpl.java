@@ -51,7 +51,9 @@ public class UserServiceImpl implements UserService {
     public void modifyUserInfo(String email, UserRequestDTO.ModifyUserRequestDTO userDto) {
         User user = findUserByEmail(email);
 
-        authService.validateNickname(userDto.getNickname());
+        if (!user.getNickname().equals(userDto.getNickname())) {
+            authService.validateNickname(userDto.getNickname());
+        }
         user.updateUser(userDto.getNickname(), userDto.getProfileImage());
     }
 
