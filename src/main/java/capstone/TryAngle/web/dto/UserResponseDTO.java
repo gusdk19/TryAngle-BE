@@ -9,6 +9,8 @@ public class UserResponseDTO {
     @AllArgsConstructor
     public static class LoginResponseDTO {
         private String token;
+        private Integer userId;
+        private String username;
     }
 
     @Getter
