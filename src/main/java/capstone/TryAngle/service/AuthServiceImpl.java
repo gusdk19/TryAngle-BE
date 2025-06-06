@@ -81,7 +81,7 @@ public class AuthServiceImpl implements AuthService {
         );
 
         String token = tokenProvider.createToken(authentication);
-        return new UserResponseDTO.LoginResponseDTO(token);
+        return new UserResponseDTO.LoginResponseDTO(token, user.getUserId(), user.getNickname());
     }
 
     @Override
