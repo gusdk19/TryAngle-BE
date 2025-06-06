@@ -19,6 +19,8 @@ spring:
       enabled: true
       max-file-size: 20MB
       max-request-size: 20MB
+  jackson:
+    property-naming-strategy: SNAKE_CASE
 
 server:
   port: 8080
