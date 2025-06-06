@@ -7,4 +7,8 @@ import java.time.LocalDateTime;
 
 public interface VoteRepository extends JpaRepository<Vote, Integer> {
     int countByAuthAuthenticationIdAndCreatedAtBetween(Integer authId, LocalDateTime start, LocalDateTime end);
+
+    int countByAuth_AuthenticationId(Integer authId);
+
+    int countByAuth_AuthenticationIdAndVoteTypeTrue(Integer authenticationId);
 }

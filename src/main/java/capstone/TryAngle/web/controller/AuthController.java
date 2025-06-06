@@ -97,4 +97,17 @@ public class AuthController {
         return ApiResponse.onSuccess(SuccessStatus.AUTH_UPDATE_SUCCESS, null);
     }
 
+    // 인증 개별 조회
+    @GetMapping("/{authenticationId}")
+    public ApiResponse<?> getAuthById(@PathVariable Integer authenticationId, @AuthenticationPrincipal User user){
+        String email =user.getUsername();
+        return ApiResponse.onSuccess(SuccessStatus._OK, authService.getAuthById(email, authenticationId));
+    }
+
+    @DeleteMapping("/{authenticationId}")
+    public ApiResponse<?> deleteAuth(@PathVariable Integer authenticationId, @AuthenticationPrincipal User user){
+        String email =user.getUsername();
+        authService.deleteAuth(email, authenticationId);
+        return ApiResponse.onSuccess(SuccessStatus._OK, null);
+    }
 }

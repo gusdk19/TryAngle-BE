@@ -42,6 +42,11 @@ public class Auth {
     private LocalDateTime createdAt;
 
 
+    @OneToMany(mappedBy = "auth", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private java.util.List<Vote> votes = new java.util.ArrayList<>();
+
+
+
     public Auth(Participation participation, String authImage, String comment) {
         this.participation = participation;
         this.authImage = authImage;
@@ -50,5 +55,7 @@ public class Auth {
         this.createdAt = LocalDateTime.now();
     }
 
-
+    public void setAuthSuccess(boolean b) {
+        this.authSuccess = b;
+    }
 }
