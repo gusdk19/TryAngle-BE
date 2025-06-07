@@ -23,4 +23,18 @@ public class AuthRequestDTO {
             this.authImage = image;
         }
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class editAuthDTO {
+        private String comment;
+        @JsonProperty("auth_image")
+        private String authImage;
+
+        public void setAuthImage(String image) {
+            this.authImage = image;
+        }
+    }
 }

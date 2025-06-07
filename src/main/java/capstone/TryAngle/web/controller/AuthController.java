@@ -28,11 +28,14 @@ public class AuthController {
 
     private final AuthService authService;
 
+
+    // 인증 추가
     @PostMapping
     public ApiResponse<?> createAuth(@RequestPart("authData") AuthRequestDTO.createAuthDTO createAuthDTO,
                                      @RequestPart(value = "authImage", required = false) MultipartFile imageFile,
                                      @AuthenticationPrincipal User user
                                      ) {
+
         String email = user.getUsername();
 
         // 이미지 저장
@@ -42,14 +45,47 @@ public class AuthController {
                 Path uploadPath = Paths.get("uploads", fileName);
                 Files.createDirectories(uploadPath.getParent());
 
-                // 스트림을 열고, 빈 스트림이면 복사하지 않음
                 try (InputStream inputStream = imageFile.getInputStream()) {
                     if (inputStream.available() > 0) {
                         Files.copy(inputStream, uploadPath, StandardCopyOption.REPLACE_EXISTING);
                         String imageUrl = "http://localhost:8080/uploads/" + fileName;
                         createAuthDTO.setAuthImage(imageUrl);
                     } else {
-                        createAuthDTO.setAuthImage(null);
+                        throw new IllegalArgumentException("이미지 파일이 비어 있습니다.");
+                    }
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("이미지 업로드 실패", e);
+            }
+        } else {
+            throw new IllegalArgumentException("이미지 파일은 필수입니다.");
+        }
+
+
+        authService.createAuth(email, createAuthDTO);
+        return ApiResponse.onSuccess(SuccessStatus.AUTH_CREATE_SUCCESS, null);
+    }
+
+    // 인증 수정
+    @PutMapping("/{authenticationId}")
+    public ApiResponse<?> editAuth(@PathVariable Integer authenticationId,
+                                   @RequestPart("authData") AuthRequestDTO.editAuthDTO editAuthDTO,
+                                   @RequestPart(value = "authImage", required = false) MultipartFile imageFile,
+                                   @AuthenticationPrincipal User user) {
+
+        String email = user.getUsername();
+
+        if (imageFile != null && !imageFile.isEmpty() && imageFile.getSize() > 0) {
+            try {
+                String fileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+                Path uploadPath = Paths.get("uploads", fileName);
+                Files.createDirectories(uploadPath.getParent());
+
+                try (InputStream inputStream = imageFile.getInputStream()) {
+                    if (inputStream.available() > 0) {
+                        Files.copy(inputStream, uploadPath, StandardCopyOption.REPLACE_EXISTING);
+                        String imageUrl = "http://localhost:8080/uploads/" + fileName;
+                        editAuthDTO.setAuthImage(imageUrl);
                     }
                 }
             } catch (IOException e) {
@@ -57,7 +93,21 @@ public class AuthController {
             }
         }
 
-        authService.createAuth(email, createAuthDTO);
-        return ApiResponse.onSuccess(SuccessStatus.AUTH_CREATE_SUCCESS, null);
+        authService.editAuth(authenticationId, email, editAuthDTO);
+        return ApiResponse.onSuccess(SuccessStatus.AUTH_UPDATE_SUCCESS, null);
+    }
+
+    // 인증 개별 조회
+    @GetMapping("/{authenticationId}")
+    public ApiResponse<?> getAuthById(@PathVariable Integer authenticationId, @AuthenticationPrincipal User user){
+        String email =user.getUsername();
+        return ApiResponse.onSuccess(SuccessStatus._OK, authService.getAuthById(email, authenticationId));
+    }
+
+    @DeleteMapping("/{authenticationId}")
+    public ApiResponse<?> deleteAuth(@PathVariable Integer authenticationId, @AuthenticationPrincipal User user){
+        String email =user.getUsername();
+        authService.deleteAuth(email, authenticationId);
+        return ApiResponse.onSuccess(SuccessStatus._OK, null);
     }
 }

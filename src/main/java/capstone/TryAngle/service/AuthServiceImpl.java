@@ -3,14 +3,17 @@ package capstone.TryAngle.service;
 import capstone.TryAngle.common.GeneralException;
 import capstone.TryAngle.common.status.ErrorStatus;
 import capstone.TryAngle.config.security.TokenProvider;
+import capstone.TryAngle.model.challenge.Challenge;
 import capstone.TryAngle.model.challenge.Participation;
 import capstone.TryAngle.model.user.User;
 import capstone.TryAngle.model.challenge.Auth;
 import capstone.TryAngle.repository.AuthRepository;
 import capstone.TryAngle.repository.ParticipationRepository;
 import capstone.TryAngle.repository.UserRepository;
+import capstone.TryAngle.repository.VoteRepository;
 import capstone.TryAngle.web.converter.UserConverter;
 import capstone.TryAngle.web.dto.AuthRequestDTO;
+import capstone.TryAngle.web.dto.AuthResponseDTO;
 import capstone.TryAngle.web.dto.UserRequestDTO;
 import capstone.TryAngle.web.dto.UserResponseDTO;
 import jakarta.transaction.Transactional;
@@ -33,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
     private final TokenProvider tokenProvider;
     private final ParticipationRepository participationRepository;
     private final AuthRepository authRepository;
+    private final VoteRepository voteRepository;
 
     @Override
     public void validateEmail(String email) {
@@ -105,5 +109,82 @@ public class AuthServiceImpl implements AuthService {
 
 
         authRepository.save(auth);
+    }
+
+    @Override
+    public void editAuth(Integer authenticationId, String email, AuthRequestDTO.editAuthDTO editAuthDTO) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Auth auth = authRepository.findById(authenticationId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.AUTH_NOT_FOUND));
+
+        // 본인 인증인지 확인
+        if (!auth.getParticipation().getUser().getUserId().equals(user.getUserId())) {
+            throw new GeneralException(ErrorStatus._UNAUTHORIZED);
+        }
+
+        // 수정 필드 적용
+        if (editAuthDTO.getAuthImage() != null) {
+            auth.setAuthImage(editAuthDTO.getAuthImage());
+        }
+
+        if (editAuthDTO.getComment() != null) {
+            auth.setComment(editAuthDTO.getComment());
+        }
+    }
+
+    @Override
+    public AuthResponseDTO.getAuthDTO getAuthById(String email, Integer authenticationId) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Auth auth = authRepository.findById(authenticationId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.AUTH_NOT_FOUND));
+
+        Participation userParticipation = participationRepository
+                .findByUserUserIdAndChallengeChallengeId(
+                        user.getUserId(),
+                        auth.getParticipation().getChallenge().getChallengeId()
+                );
+
+        if (userParticipation == null) {
+            throw new GeneralException(ErrorStatus.NOT_PARTICIPATING);
+
+        }
+
+
+        int voteCount = voteRepository.countByAuth_AuthenticationId(authenticationId);
+
+        return AuthResponseDTO.getAuthDTO.builder()
+                .authId(auth.getAuthenticationId())
+                .challengeId(auth.getParticipation().getChallenge().getChallengeId())
+                .userNickname(auth.getParticipation().getUser().getNickname())
+                .comment(auth.getComment())
+                .authImage(auth.getAuthImage())
+                .voteCount(voteCount)
+                .authSuccess(auth.getAuthSuccess())
+                .createdAt(auth.getCreatedAt())
+                .build();
+    }
+
+
+
+    @Override
+    public void deleteAuth(String email, Integer authenticationId) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Auth auth = authRepository.findById(authenticationId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.AUTH_NOT_FOUND));
+
+
+        // 유저가 작성한 인증글인지 확인
+        if (!auth.getParticipation().getUser().getUserId().equals(user.getUserId())) {
+            throw new GeneralException(ErrorStatus._UNAUTHORIZED);
+        }
+
+        authRepository.delete(auth);
+
     }
 }

@@ -46,7 +46,10 @@ ErrorStatus implements BaseErrorCode {
     CHALLENGE_FULL(HttpStatus.CONFLICT, "PARTICIPATION409", "참여 인원이 모두 찼습니다." ),
     DEPOSIT_TOO_SMALL(HttpStatus.CONFLICT, "PARTICIPATION409", "예치금이 최소 조건보다 작습니다."),
     INVALID_INVITE_CODE(HttpStatus.CONFLICT, "PARTICIPATION409" , "잘못된 초대 코드 입니다." ),
-    NOT_PARTICIPATING(HttpStatus.CONFLICT, "PARTICIPATION409" , "해당 챌린지에 참여하지 않은 유저입니다. 인증을 추가할 수 없습니다.");
+    NOT_PARTICIPATING(HttpStatus.CONFLICT, "PARTICIPATION409" , "해당 챌린지에 참여하지 않은 유저입니다"),
+
+    // 인증 관련 응답
+    AUTH_NOT_FOUND(HttpStatus.CONFLICT, "AUTH404" , "해당 인증 내역을 찾을 수 없습니다.");
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
