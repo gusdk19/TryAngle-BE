@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 public class ChallengeResponseDTO {
@@ -22,6 +23,7 @@ public class ChallengeResponseDTO {
         private String challengeName;
         private String challengeThumbnail;
         private String challengeShortIntro;
+        private String challengeDescription;
         private Category category;
         private boolean challengePublic;
         private LocalDate startDate;
@@ -33,8 +35,13 @@ public class ChallengeResponseDTO {
         private Integer minDeposit;
         private boolean returnType;
         private String authFrequency;
+        private String depositManageMethod;
+        private String authMethod;
+        private String voteMethod;
         private String leaderNickname;
+        private List<Integer> participantList;
     }
+
 
     @Getter
     @NoArgsConstructor
@@ -57,7 +64,7 @@ public class ChallengeResponseDTO {
         private Integer minDeposit;
         private boolean returnType;
         private String authFrequency;
-        private boolean isLeader;
+        private String leaderNickname;
         private boolean participationSuccess;
 
     }

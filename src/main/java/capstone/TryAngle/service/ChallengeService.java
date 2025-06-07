@@ -11,7 +11,7 @@ public interface ChallengeService {
 
     ChallengeResponseDTO.getChallengeDTO getChallengeById(Integer challengeId);
 
-    List<ChallengeResponseDTO.getChallengeDTO> getMyChallenges(String email);
+    List<ChallengeResponseDTO.getMyChallengeDTO> getMyChallenges(String email);
 
     ParticipationResponseDTO.getParticipationDTO getMyChallengeStatus(String email, Integer challengeId);
 

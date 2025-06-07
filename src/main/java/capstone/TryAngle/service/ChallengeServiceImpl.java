@@ -19,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -36,25 +38,52 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Override
     public List<ChallengeResponseDTO.getChallengeDTO> getChallenges() {
         List<Challenge> challenges = challengeRepository.findAll();
-        return ChallengeConverter.toChallengeListDTO(challenges);
+        Map<Integer, List<Integer>> challengeIdToParticipants = new HashMap<>();
 
+        for (Challenge challenge : challenges) {
+            List<Integer> ids = participationRepository
+                    .findAllByChallengeChallengeId(challenge.getChallengeId())
+                    .stream()
+                    .map(p -> p.getUser().getUserId())
+                    .collect(Collectors.toList());
+
+            challengeIdToParticipants.put(challenge.getChallengeId(), ids);
+        }
+
+        return ChallengeConverter.toChallengeListDTO(challenges, challengeIdToParticipants);
     }
 
     @Override
     public ChallengeResponseDTO.getChallengeDTO getChallengeById(Integer challengeId) {
             Challenge challenge = challengeRepository.findById(challengeId)
                     .orElseThrow(() -> new GeneralException(ErrorStatus.CHALLENGE_NOT_FOUND));
-            return ChallengeConverter.toChallengeDTO(challenge);
+
+
+        List<Integer> participantIds = participationRepository
+                .findAllByChallengeChallengeId(challengeId)
+                .stream()
+                .map(p -> p.getUser().getUserId())
+                .collect(Collectors.toList());
+            return ChallengeConverter.toChallengeDTO(challenge, participantIds);
         }
 
     @Override
-    public List<ChallengeResponseDTO.getChallengeDTO> getMyChallenges(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(()-> new GeneralException((ErrorStatus.USER_NOT_FOUND)));
+    public List<ChallengeResponseDTO.getMyChallengeDTO> getMyChallenges(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
         List<Participation> participations = participationRepository.findAllByUserUserId(user.getUserId());
+
         return participations.stream()
-                .map(participation -> ChallengeConverter.toChallengeDTO(participation.getChallenge()))
+                .map(participation -> {
+                    Challenge challenge = participation.getChallenge();
+                    boolean participationSuccess = participation.getParticipationSuccess();
+
+                    return ChallengeConverter.toMyChallengeDTO(challenge, participationSuccess);
+                })
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public ParticipationResponseDTO.getParticipationDTO getMyChallengeStatus(String email, Integer challengeId) {
