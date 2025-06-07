@@ -9,6 +9,8 @@ public class UserResponseDTO {
     @AllArgsConstructor
     public static class LoginResponseDTO {
         private String token;
+        private Integer userId;
+        private String username;
     }
 
     @Getter
@@ -62,5 +64,11 @@ public class UserResponseDTO {
         private String unlockCondition;
         private Boolean isVisible;
         private String image;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class FindIdResponseDTO {
+        private String email;
     }
 }

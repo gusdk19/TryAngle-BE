@@ -33,6 +33,7 @@ ErrorStatus implements BaseErrorCode {
     EXCEEDS_RETURN_MONEY(HttpStatus.BAD_REQUEST, "USER4000", "현재 환급금 초과 금액은 출금이 불가능합니다."),
     BADGE_NOT_FOUND(HttpStatus.NOT_FOUND, "USER404", "존재하지 않는 뱃지 ID 입니다."),
     NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "USER404", "존재하지 않는 알림 ID 입니다."),
+    INVALID_EMAIL(HttpStatus.NOT_FOUND, "USER404", "존재하지 않는 이메일입니다"),
 
     // 챌린지 관련 응답
     CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND, "CHALLENGE404", "챌린지 정보가 존재하지 않습니다"),

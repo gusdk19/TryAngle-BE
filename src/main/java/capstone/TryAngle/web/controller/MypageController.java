@@ -82,4 +82,11 @@ public class MypageController {
         return ApiResponse.onSuccess(SuccessStatus.WITHDRAWAL_SUCCESS, message);
     }
 
+    @DeleteMapping("/delete/account")
+    public ApiResponse<?> deleteAccount(@AuthenticationPrincipal User user) {
+        String email = user.getUsername();
+        userService.deleteAccount(email);
+        return ApiResponse.onSuccess(SuccessStatus.USER_ACCOUNT_DELETED, null);
+    }
+
 }

@@ -51,7 +51,9 @@ public class UserServiceImpl implements UserService {
     public void modifyUserInfo(String email, UserRequestDTO.ModifyUserRequestDTO userDto) {
         User user = findUserByEmail(email);
 
-        authService.validateNickname(userDto.getNickname());
+        if (!user.getNickname().equals(userDto.getNickname())) {
+            authService.validateNickname(userDto.getNickname());
+        }
         user.updateUser(userDto.getNickname(), userDto.getProfileImage());
     }
 
@@ -171,5 +173,31 @@ public class UserServiceImpl implements UserService {
             throw new GeneralException(ErrorStatus.EXCEEDS_RETURN_MONEY);
         }
         user.withdrawal(amount);
+    }
+
+    @Override
+    public void deleteAccount(String email) {
+        User user = findUserByEmail(email);
+
+        // 알림 삭제: 수신자/발신자 기준 모두 삭제 (cascade)
+        notificationRepository.deleteByReceiver(user);
+        notificationRepository.deleteBySender(user);
+
+        // 유저 삭제
+        userRepository.delete(user);
+    }
+
+    @Override
+    public UserResponseDTO.FindIdResponseDTO findId(UserRequestDTO.FindIdDTO findIdDTO) {
+        String name = findIdDTO.getName();
+        String phone = findIdDTO.getPhone();
+
+        if (name == null || name.isBlank() || phone == null || phone.isBlank()) {
+            throw new GeneralException(ErrorStatus.MISSING_REQUIRED_VALUE);
+        }
+        User user = userRepository.findByNameAndPhone(name, phone)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        return new UserResponseDTO.FindIdResponseDTO(user.getEmail());
     }
 }
