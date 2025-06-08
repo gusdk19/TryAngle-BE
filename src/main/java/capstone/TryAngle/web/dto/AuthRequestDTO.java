@@ -46,4 +46,14 @@ public class AuthRequestDTO {
         @JsonProperty("vote_type")
         private Boolean voteType;
     }
+
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class reactionAuthDTO {
+        @JsonProperty("reaction_id")
+        private Integer reactionId;
+    }
 }

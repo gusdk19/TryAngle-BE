@@ -5,6 +5,8 @@ import capstone.TryAngle.web.dto.AuthResponseDTO;
 import capstone.TryAngle.web.dto.UserRequestDTO;
 import capstone.TryAngle.web.dto.UserResponseDTO;
 
+import java.util.List;
+
 public interface AuthService {
     void validateEmail(String email);
     void validateNickname(String nickname);
@@ -20,4 +22,8 @@ public interface AuthService {
     void deleteAuth(String email, Integer authenticationId);
 
     void voteAuth(String email, Integer authenticationId, AuthRequestDTO.voteAuthDTO voteAuthDTO);
+
+    void reactionAuth(String email, Integer authenticationId, AuthRequestDTO.reactionAuthDTO reactionAuthDTO);
+
+    List<AuthResponseDTO.getAuthDTO> getAllAuth(String email, Integer challengeId);
 }
