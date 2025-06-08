@@ -23,6 +23,10 @@ public class Auth {
     @Column(name="authentication_id", nullable = false)
     private Integer authenticationId;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "reaction", nullable = true)
+    private Reaction reaction;
+
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="participation_id", nullable = false)
     private Participation participation;
@@ -53,9 +57,16 @@ public class Auth {
         this.comment = comment;
         this.authSuccess = false;
         this.createdAt = LocalDateTime.now();
+        this.reaction = null;
     }
 
     public void setAuthSuccess(boolean b) {
         this.authSuccess = b;
     }
+
+    public void setReaction(Reaction reaction) {
+        this.reaction = reaction;
+    }
+
+
 }

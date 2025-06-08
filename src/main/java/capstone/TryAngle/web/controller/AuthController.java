@@ -110,4 +110,11 @@ public class AuthController {
         authService.deleteAuth(email, authenticationId);
         return ApiResponse.onSuccess(SuccessStatus._OK, null);
     }
+
+    @PostMapping("/{authenticationId}/vote")
+    public ApiResponse<?> voteAuth(@PathVariable Integer authenticationId, @AuthenticationPrincipal User user, @RequestBody AuthRequestDTO.voteAuthDTO voteAuthDTO){
+        String email =user.getUsername();
+        authService.voteAuth(email, authenticationId, voteAuthDTO);
+        return ApiResponse.onSuccess(SuccessStatus._OK, null);
+    }
 }
