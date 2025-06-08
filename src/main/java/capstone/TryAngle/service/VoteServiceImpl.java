@@ -1,18 +1,28 @@
 package capstone.TryAngle.service;
 
 import capstone.TryAngle.model.challenge.Auth;
+import capstone.TryAngle.repository.AuthRepository;
+import capstone.TryAngle.repository.ParticipationRepository;
+import capstone.TryAngle.repository.VoteRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-public class VoteServiceImpl {
+@Service
+@RequiredArgsConstructor
+public class VoteServiceImpl implements VoteService {
 
-    // vote service -> vote create 후에 시행
-    // voteRepository.save(vote);
-    // evaluateAuthSuccessAfterVoting(vote.getAuth());
-//    public void evaluateAuthSuccessAfterVoting(Auth auth) {
-//        int approveCount = voteRepository.countByAuth_AuthenticationIdAndVoteTypeTrue(auth.getAuthenticationId());
-//        int totalParticipants = auth.getParticipation().getChallenge().getNowPeople();
-//        if (approveCount > totalParticipants / 2 && !Boolean.TRUE.equals(auth.getAuthSuccess())) {
-//            auth.setAuthSuccess(true);
-//            authRepository.save(auth);
-//        }
-//    }
+    private final VoteRepository voteRepository;
+    private final AuthRepository authRepository;
+    private final ParticipationRepository participationRepository;
+
+    @Override
+    public void evaluateAuthSuccessAfterVoting(Auth auth) {
+        int approveCount = voteRepository.countByAuthAuthenticationIdAndVoteType(auth.getAuthenticationId(), true);
+        int totalParticipants = participationRepository.countByChallengeChallengeId(auth.getParticipation().getChallenge().getChallengeId());
+
+        if (approveCount > totalParticipants / 2 && !Boolean.TRUE.equals(auth.getAuthSuccess())) {
+            auth.setAuthSuccess(true);
+            authRepository.save(auth);
+        }
+    }
 }

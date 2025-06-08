@@ -49,7 +49,9 @@ ErrorStatus implements BaseErrorCode {
     NOT_PARTICIPATING(HttpStatus.CONFLICT, "PARTICIPATION409" , "해당 챌린지에 참여하지 않은 유저입니다"),
 
     // 인증 관련 응답
-    AUTH_NOT_FOUND(HttpStatus.CONFLICT, "AUTH404" , "해당 인증 내역을 찾을 수 없습니다.");
+    AUTH_NOT_FOUND(HttpStatus.CONFLICT, "AUTH404" , "해당 인증 내역을 찾을 수 없습니다."),
+    ALREADY_VOTED(HttpStatus.CONFLICT, "AUTH409" , "이미 투표한 내역이 존재합니다."),
+    VOTE_NOT_FOUND(HttpStatus.CONFLICT, "AUTH404" , "아직 투표 내역이 존재하지 않습니다.");
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;

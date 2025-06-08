@@ -3,10 +3,8 @@ package capstone.TryAngle.service;
 import capstone.TryAngle.common.GeneralException;
 import capstone.TryAngle.common.status.ErrorStatus;
 import capstone.TryAngle.config.security.TokenProvider;
-import capstone.TryAngle.model.challenge.Challenge;
-import capstone.TryAngle.model.challenge.Participation;
+import capstone.TryAngle.model.challenge.*;
 import capstone.TryAngle.model.user.User;
-import capstone.TryAngle.model.challenge.Auth;
 import capstone.TryAngle.repository.*;
 import capstone.TryAngle.web.converter.UserConverter;
 import capstone.TryAngle.web.dto.AuthRequestDTO;
@@ -22,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -34,6 +33,8 @@ public class AuthServiceImpl implements AuthService {
     private final ParticipationRepository participationRepository;
     private final AuthRepository authRepository;
     private final VoteRepository voteRepository;
+    private final VoteService voteService;
+
     private final ChallengeRepository challengeRepository;
 
     @Override
@@ -192,5 +193,66 @@ public class AuthServiceImpl implements AuthService {
 
         Auth auth = authRepository.findById(authenticationId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.AUTH_NOT_FOUND));
+
+        Integer challengeId = auth.getParticipation().getChallenge().getChallengeId();
+
+        boolean isParticipating = participationRepository.existsByUserUserIdAndChallengeChallengeId(user.getUserId(), challengeId);
+        if (!isParticipating) {
+            throw new GeneralException(ErrorStatus.NOT_PARTICIPATING);
+        }
+
+        // 이미 투표했는지 확인
+        boolean alreadyVoted = voteRepository.existsByUserUserIdAndAuthAuthenticationId(user.getUserId(), authenticationId);
+        if (alreadyVoted) {
+            throw new GeneralException(ErrorStatus.ALREADY_VOTED);
+        }
+
+        // 투표 생성
+        Vote vote = new Vote(user, auth, voteAuthDTO.getVoteType());
+
+        voteRepository.save(vote);
+        voteService.evaluateAuthSuccessAfterVoting(auth);
+
     }
+
+    @Override
+    public void reactionAuth(String email, Integer authenticationId, AuthRequestDTO.reactionAuthDTO reactionAuthDTO) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Auth auth = authRepository.findById(authenticationId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.AUTH_NOT_FOUND));
+        Vote vote = voteRepository.findByUserAndAuth(user, auth)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.VOTE_NOT_FOUND));
+        Reaction reaction = Reaction.values()[reactionAuthDTO.getReactionId()];
+        vote.setReaction(reaction);
+    }
+
+    @Override
+    public List<AuthResponseDTO.getAuthDTO> getAllAuth(String email, Integer challengeId) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Participation participation = participationRepository.findByUserUserIdAndChallengeChallengeId(
+                user.getUserId(), challengeId
+        );
+        if (participation == null) {
+            throw new GeneralException(ErrorStatus.NOT_PARTICIPATING);
+        }
+
+        List<Auth> authList = authRepository.findAllByParticipationChallengeChallengeId(challengeId);
+        return authList.stream()
+                .map(auth -> AuthResponseDTO.getAuthDTO.builder()
+                        .authId(auth.getAuthenticationId())
+                        .challengeId(challengeId)
+                        .userNickname(auth.getParticipation().getUser().getNickname())
+                        .comment(auth.getComment())
+                        .authImage(auth.getAuthImage())
+                        .voteCount(voteRepository.countByAuth_AuthenticationId(auth.getAuthenticationId()))
+                        .authSuccess(auth.getAuthSuccess())
+                        .createdAt(auth.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
 }

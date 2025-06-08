@@ -32,7 +32,7 @@ public class Vote {
 
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "reaction", nullable = false)
+    @Column(name = "reaction", nullable = true)
     private Reaction reaction;
 
     @Column(name="vote_type", nullable = false)
@@ -44,10 +44,16 @@ public class Vote {
 
 
 
-    public Vote(User user, Auth auth, Reaction reaction, Boolean vote_type) {
+    public Vote(User user, Auth auth, Boolean vote_type) {
         this.user = user;
         this.auth = auth;
-        this.reaction = reaction;
         this.voteType = vote_type;
     }
+
+
+
+    public void setReaction(Reaction reaction) {
+        this.reaction = reaction;
+    }
+
 }

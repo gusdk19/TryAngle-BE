@@ -16,4 +16,6 @@ public interface ParticipationRepository extends JpaRepository<Participation, In
     boolean existsByUserUserIdAndChallengeChallengeId(Integer userId, Integer challengeId);
 
     List<Participation> findAllByChallengeChallengeId(Integer challengeId);
+
+    int countByChallengeChallengeId(Integer challengeId);
 }
