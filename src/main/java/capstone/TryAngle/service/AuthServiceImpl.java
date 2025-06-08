@@ -7,10 +7,7 @@ import capstone.TryAngle.model.challenge.Challenge;
 import capstone.TryAngle.model.challenge.Participation;
 import capstone.TryAngle.model.user.User;
 import capstone.TryAngle.model.challenge.Auth;
-import capstone.TryAngle.repository.AuthRepository;
-import capstone.TryAngle.repository.ParticipationRepository;
-import capstone.TryAngle.repository.UserRepository;
-import capstone.TryAngle.repository.VoteRepository;
+import capstone.TryAngle.repository.*;
 import capstone.TryAngle.web.converter.UserConverter;
 import capstone.TryAngle.web.dto.AuthRequestDTO;
 import capstone.TryAngle.web.dto.AuthResponseDTO;
@@ -37,6 +34,7 @@ public class AuthServiceImpl implements AuthService {
     private final ParticipationRepository participationRepository;
     private final AuthRepository authRepository;
     private final VoteRepository voteRepository;
+    private final ChallengeRepository challengeRepository;
 
     @Override
     public void validateEmail(String email) {
@@ -178,7 +176,6 @@ public class AuthServiceImpl implements AuthService {
         Auth auth = authRepository.findById(authenticationId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.AUTH_NOT_FOUND));
 
-
         // 유저가 작성한 인증글인지 확인
         if (!auth.getParticipation().getUser().getUserId().equals(user.getUserId())) {
             throw new GeneralException(ErrorStatus._UNAUTHORIZED);
@@ -186,5 +183,14 @@ public class AuthServiceImpl implements AuthService {
 
         authRepository.delete(auth);
 
+    }
+
+    @Override
+    public void voteAuth(String email, Integer authenticationId, AuthRequestDTO.voteAuthDTO voteAuthDTO) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Auth auth = authRepository.findById(authenticationId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.AUTH_NOT_FOUND));
     }
 }

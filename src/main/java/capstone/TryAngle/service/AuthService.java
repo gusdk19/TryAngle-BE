@@ -18,4 +18,6 @@ public interface AuthService {
     AuthResponseDTO.getAuthDTO getAuthById(String email, Integer authenticationId);
 
     void deleteAuth(String email, Integer authenticationId);
+
+    void voteAuth(String email, Integer authenticationId, AuthRequestDTO.voteAuthDTO voteAuthDTO);
 }

@@ -37,4 +37,13 @@ public class AuthRequestDTO {
             this.authImage = image;
         }
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class voteAuthDTO {
+        @JsonProperty("vote_type")
+        private Boolean voteType;
+    }
 }
