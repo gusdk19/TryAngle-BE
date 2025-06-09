@@ -415,22 +415,27 @@ public class ChallengeServiceImpl implements ChallengeService {
         List<Participation> participations = participationRepository.findAllByUserUserId(user.getUserId());
 
         return participations.stream()
-                .map(p -> ChallengeResponseDTO.ChallengeDepositStatusDTO.builder()
-                        .challengeId(p.getChallenge().getChallengeId())
-                        .challengeName(p.getChallenge().getChallengeName())
-                        .challengeThumbnail(p.getChallenge().getChallengeThumbnail())
-                        .deposit(p.getDepositAmount())
-                        .status(convertStatusToString(p.getStatus()))
-                        .depositDate(p.getCreatedAt())
-                        .depositReturnDate(p.getDepositReturnDate())
-                        // 달성률 로직 짜면 비례해서 refund 되도록 수정
-                        .refundAmount(p.getDepositAmount() != null ? p.getDepositAmount() : 0)
-                        .build())
-                .collect(Collectors.toList());
+                .map(p -> {
+                    Integer depositAmount = p.getDepositAmount() != null ? p.getDepositAmount() : 0;
+                    Integer status = p.getStatus();
 
+                    int refundAmount = (status != null && status == 0) ? depositAmount : 0;
+
+                    return ChallengeResponseDTO.ChallengeDepositStatusDTO.builder()
+                            .challengeId(p.getChallenge().getChallengeId())
+                            .challengeName(p.getChallenge().getChallengeName())
+                            .challengeThumbnail(p.getChallenge().getChallengeThumbnail())
+                            .deposit(depositAmount)
+                            .status(convertStatusToString(status))
+                            .depositDate(p.getCreatedAt())
+                            .depositReturnDate(p.getDepositReturnDate())
+                            .refundAmount(refundAmount)
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 
-    private String convertStatusToString(Integer statusCode) {
+    private String convertStatusToString    (Integer statusCode) {
         return switch (statusCode) {
             case 0 -> "refunded";
             case 1 -> "donated";

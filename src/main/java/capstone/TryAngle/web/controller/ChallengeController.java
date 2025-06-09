@@ -3,6 +3,7 @@ package capstone.TryAngle.web.controller;
 import capstone.TryAngle.common.ApiResponse;
 import capstone.TryAngle.common.status.SuccessStatus;
 import capstone.TryAngle.service.ChallengeService;
+import capstone.TryAngle.service.VoteService;
 import capstone.TryAngle.web.dto.ChallengeRequestDTO;
 import capstone.TryAngle.web.dto.ChallengeResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import java.util.UUID;
 @RequestMapping("/challenge")
 public class ChallengeController {
     private final ChallengeService challengeService;
+    private final VoteService voteService;
 
     // 챌린지 전체 리스트 조회
     @GetMapping
@@ -162,10 +164,19 @@ public class ChallengeController {
     }
 
     // 내 챌린지별 예치금 리스트로 조회
-    @GetMapping("/my/deposit-status")
+    @GetMapping("/my/deposit")
     public ApiResponse<?> getMyDepositStatus(@AuthenticationPrincipal User loginUser) {
         String email = loginUser.getUsername();
         return ApiResponse.onSuccess(SuccessStatus._OK,challengeService.getMyDepositStatus(email));
+    }
+
+    // 챌린지 팀원 투표 현황 리스트로 조회
+    @GetMapping("/{challengeId}/users/vote")
+    public ApiResponse<?> getMyVoteStatus(
+            @PathVariable Integer challengeId,
+            @AuthenticationPrincipal User loginUser) {
+        String email = loginUser.getUsername();
+        return ApiResponse.onSuccess(SuccessStatus._OK,voteService.getMyVoteStatus(challengeId, email));
     }
 
 

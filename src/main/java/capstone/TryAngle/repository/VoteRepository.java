@@ -20,4 +20,6 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
     int countByAuthAuthenticationIdAndVoteType(Integer authenticationId, boolean b);
 
     Optional<Vote> findByUserAndAuth(User user, Auth auth);
+
+    boolean existsByAuthAuthenticationIdAndUserUserId(Integer authId, Integer userId);
 }

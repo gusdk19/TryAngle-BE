@@ -11,4 +11,6 @@ public interface AuthRepository extends JpaRepository<Auth, Integer> {
     List<Auth> findByParticipationParticipationIdAndCreatedAtBetween(Integer participationId, LocalDateTime start, LocalDateTime end);
 
     List<Auth> findAllByParticipationChallengeChallengeId(Integer challengeId);
+
+    List<Auth> findByParticipationChallengeChallengeIdAndCreatedAtBetween(Integer challengeId, LocalDateTime todayStart, LocalDateTime todayEnd);
 }
