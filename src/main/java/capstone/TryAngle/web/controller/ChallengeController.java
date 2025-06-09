@@ -4,6 +4,7 @@ import capstone.TryAngle.common.ApiResponse;
 import capstone.TryAngle.common.status.SuccessStatus;
 import capstone.TryAngle.service.ChallengeService;
 import capstone.TryAngle.web.dto.ChallengeRequestDTO;
+import capstone.TryAngle.web.dto.ChallengeResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -157,6 +159,13 @@ public class ChallengeController {
         challengeService.quitChallenge(quitChallengeDTO.getChallengeId(), email);
         return ApiResponse.onSuccess(SuccessStatus.QUIT_SUCCESS, null);
 
+    }
+
+    // 내 챌린지별 예치금 리스트로 조회
+    @GetMapping("/my/deposit-status")
+    public ApiResponse<?> getMyDepositStatus(@AuthenticationPrincipal User loginUser) {
+        String email = loginUser.getUsername();
+        return ApiResponse.onSuccess(SuccessStatus._OK,challengeService.getMyDepositStatus(email));
     }
 
 

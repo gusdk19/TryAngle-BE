@@ -75,7 +75,6 @@ public class Participation {
             this.depositStatus = 0;  // refunded
             this.depositReturnDate = LocalDate.now();
         }
-    }
 
 
-}
+    }}

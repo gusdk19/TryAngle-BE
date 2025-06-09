@@ -345,6 +345,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                     // 환급인 경우만 돈 처리
                     participant.updateChallengeMoney(participant.getChallengeMoney() - depositAmount);
                     participant.updateReturnMoney(depositAmount); // returnMoney += depositAmount
+
                 }
             }
         }
@@ -404,6 +405,38 @@ public class ChallengeServiceImpl implements ChallengeService {
         challenge.setNowPeople(challenge.getNowPeople() - 1);
         // 유저 전체 예치금 업데이트
         user.updateChallengeMoney(user.getChallengeMoney()-participation.getDepositAmount());
+    }
+
+    @Override
+    public List<ChallengeResponseDTO.ChallengeDepositStatusDTO> getMyDepositStatus(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        List<Participation> participations = participationRepository.findAllByUserUserId(user.getUserId());
+
+        return participations.stream()
+                .map(p -> ChallengeResponseDTO.ChallengeDepositStatusDTO.builder()
+                        .challengeId(p.getChallenge().getChallengeId())
+                        .challengeName(p.getChallenge().getChallengeName())
+                        .challengeThumbnail(p.getChallenge().getChallengeThumbnail())
+                        .deposit(p.getDepositAmount())
+                        .status(convertStatusToString(p.getStatus()))
+                        .depositDate(p.getCreatedAt())
+                        .depositReturnDate(p.getDepositReturnDate())
+                        // 달성률 로직 짜면 비례해서 refund 되도록 수정
+                        .refundAmount(p.getDepositAmount() != null ? p.getDepositAmount() : 0)
+                        .build())
+                .collect(Collectors.toList());
+
+    }
+
+    private String convertStatusToString(Integer statusCode) {
+        return switch (statusCode) {
+            case 0 -> "refunded";
+            case 1 -> "donated";
+            case 2 -> "not_refunded_yet";
+            default -> "알수없음";
+        };
     }
 
 

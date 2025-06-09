@@ -28,4 +28,6 @@ public interface ChallengeService {
     ChallengeResponseDTO.createInviteCodeDTO createInviteCode(String inviteCode, Integer challengeId, String email);
 
     void quitChallenge(Integer challengeId, String email);
+
+    List<ChallengeResponseDTO.ChallengeDepositStatusDTO> getMyDepositStatus(String email);
 }
