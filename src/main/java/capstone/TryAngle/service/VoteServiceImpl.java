@@ -20,7 +20,8 @@ public class VoteServiceImpl implements VoteService {
         int approveCount = voteRepository.countByAuthAuthenticationIdAndVoteType(auth.getAuthenticationId(), true);
         int totalParticipants = participationRepository.countByChallengeChallengeId(auth.getParticipation().getChallenge().getChallengeId());
 
-        if (approveCount > totalParticipants / 2 && !Boolean.TRUE.equals(auth.getAuthSuccess())) {
+        // 찬성이 과반수 이상이면 authSuccess
+        if (approveCount >= totalParticipants / 2 && !Boolean.TRUE.equals(auth.getAuthSuccess())) {
             auth.setAuthSuccess(true);
             authRepository.save(auth);
         }

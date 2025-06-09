@@ -35,6 +35,7 @@ public enum SuccessStatus implements BaseCode {
     DELETE_SUCCESS(HttpStatus.OK, "CHALLENGE201", "챌린지를 삭제했습니다."),
     JOIN_SUCCESS(HttpStatus.OK, "CHALLENGE200", "챌린지 참여 성공했습니다."),
     END_SUCCESS(HttpStatus.OK, "CHALLENGE200", "챌린지가 종료되었습니다."),
+    QUIT_SUCCESS(HttpStatus.OK, "CHALLENGE200", "챌린지가 참여가 취소되었습니다."),
 
 
     // 인증 관련 응답

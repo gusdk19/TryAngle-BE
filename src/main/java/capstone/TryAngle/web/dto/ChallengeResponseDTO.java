@@ -150,4 +150,19 @@ public class ChallengeResponseDTO {
         private String inviteCode;
     }
 
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class ChallengeDepositStatusDTO {
+        private Integer challengeId;
+        private String challengeName;
+        private String challengeThumbnail;
+        private Integer deposit;
+        private String status; //  (refunded, donated, not_refunded_yet)
+        private LocalDateTime depositDate;
+        private LocalDate depositReturnDate;
+        private Integer refundAmount;
+    }
+
 }
