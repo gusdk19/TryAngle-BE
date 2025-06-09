@@ -165,4 +165,12 @@ public class ChallengeResponseDTO {
         private Integer refundAmount;
     }
 
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class VoteStatusDTO {
+        private String nickname;
+        private boolean voted;
+    }
 }
