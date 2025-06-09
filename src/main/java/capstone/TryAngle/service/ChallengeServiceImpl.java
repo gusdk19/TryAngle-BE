@@ -115,7 +115,6 @@ public class ChallengeServiceImpl implements ChallengeService {
                 startOfDay,
                 endOfDay
         );
-
         boolean authVoteStatus = false;
         if (!todayAuths.isEmpty()) {
             Auth todayAuth = todayAuths.get(0); // 가장 최근 인증 하나 기준
@@ -157,15 +156,6 @@ public class ChallengeServiceImpl implements ChallengeService {
         challengeRepository.delete(challenge);
     }
 
-    private String generateInviteCode(int length) {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        StringBuilder sb = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < length; i++) {
-            sb.append(chars.charAt(random.nextInt(chars.length())));
-        }
-        return sb.toString();
-    }
 
     @Override
     public void createChallenge(ChallengeRequestDTO.createChallengeDTO createChallengeDTO, String email, Integer deposit) {
@@ -173,10 +163,6 @@ public class ChallengeServiceImpl implements ChallengeService {
         User leader = userRepository.findByEmail(email)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
 
-//        String inviteCode = null;
-//        if (!createChallengeDTO.getChallengePublic()) {
-//            inviteCode = generateInviteCode(6);  // 비공개 챌린지일 경우에만 생성
-//        }
 
         Challenge challenge = new Challenge(
                 null,
@@ -385,6 +371,39 @@ public class ChallengeServiceImpl implements ChallengeService {
         challenge.setInviteCode(inviteCode);
         return ChallengeResponseDTO.createInviteCodeDTO.builder().inviteCode(inviteCode)
                 .build();
+    }
+
+    @Override
+    public void quitChallenge(Integer challengeId, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.CHALLENGE_NOT_FOUND));
+
+        Participation participation = participationRepository
+                .findByUserUserIdAndChallengeChallengeId(user.getUserId(), challengeId);
+
+        if (participation == null) {
+            throw new GeneralException(ErrorStatus.NOT_PARTICIPATING);
+        }
+
+        // 챌린지 리더는 탈퇴 불가
+        if (challenge.getLeader().getUserId().equals(user.getUserId())) {
+            throw new GeneralException(ErrorStatus.LEADER_CANNOT_CANCEL_PARTICIPATION);
+        }
+
+        // 챌린지 시작 전까지만 탈퇴 가능
+        if (LocalDate.now().isAfter(challenge.getStartDate())) {
+            throw new GeneralException(ErrorStatus.CHALLENGE_ALREADY_STARTED);
+        }
+
+        participationRepository.delete(participation);
+
+        // nowPeople 수 감소
+        challenge.setNowPeople(challenge.getNowPeople() - 1);
+        // 유저 전체 예치금 업데이트
+        user.updateChallengeMoney(user.getChallengeMoney()-participation.getDepositAmount());
     }
 
 

@@ -9,6 +9,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="participation")
@@ -44,6 +46,10 @@ public class Participation {
 
     @Column(name = "deposit_return_date", nullable = true)
     private LocalDate depositReturnDate;
+
+    @OneToMany(mappedBy = "participation", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Auth> authList = new ArrayList<>();
+
 
     @CreatedDate
     @Column(name="created_at", nullable = false)

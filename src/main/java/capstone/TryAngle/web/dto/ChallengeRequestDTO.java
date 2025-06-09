@@ -111,4 +111,13 @@ public class ChallengeRequestDTO {
         private Integer challengeId;
 
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class quitChallengeDTO {
+        @JsonProperty("challenge_id")
+        private Integer challengeId;
+    }
 }

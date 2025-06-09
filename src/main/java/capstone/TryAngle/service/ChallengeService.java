@@ -26,4 +26,6 @@ public interface ChallengeService {
     void endChallenge(Integer challengeId);
 
     ChallengeResponseDTO.createInviteCodeDTO createInviteCode(String inviteCode, Integer challengeId, String email);
+
+    void quitChallenge(Integer challengeId, String email);
 }

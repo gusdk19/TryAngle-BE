@@ -149,5 +149,15 @@ public class ChallengeController {
 
     }
 
+    // 챌린지 참여 취소
+    @DeleteMapping("/quit")
+    public ApiResponse<?> quitChallenge(@RequestBody ChallengeRequestDTO.quitChallengeDTO quitChallengeDTO, @AuthenticationPrincipal User loginUser){
+        String email = loginUser.getUsername();
+
+        challengeService.quitChallenge(quitChallengeDTO.getChallengeId(), email);
+        return ApiResponse.onSuccess(SuccessStatus.QUIT_SUCCESS, null);
+
+    }
+
 
 }

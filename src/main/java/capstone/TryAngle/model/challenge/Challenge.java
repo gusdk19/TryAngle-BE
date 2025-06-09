@@ -12,6 +12,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="challenge")
@@ -88,9 +90,39 @@ public class Challenge {
     @Column(name = "vote_method", nullable = false)
     private String voteMethod;
 
+
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Participation> participations = new ArrayList<>();
+
     @CreatedDate
     @Column(name="created_at", nullable = false)
     private LocalDateTime createdAt;
+
+
+    public Challenge(Integer challengeId, Category category, User leader, String challengeName, String challengeThumbnail, String challengeShortIntro, String challengeDescription, Boolean challengePublic, LocalDate startDate, LocalDate endDate, LocalTime authTimeStart, LocalTime authTimeEnd, Integer maxPeople, Integer nowPeople, Integer minDeposit, Boolean returnType, String authFrequency, String inviteCode, String depositManageMethod, String authMethod, String voteMethod, LocalDateTime createdAt) {
+        this.challengeId = challengeId;
+        this.category = category;
+        this.leader = leader;
+        this.challengeName = challengeName;
+        this.challengeThumbnail = challengeThumbnail;
+        this.challengeShortIntro = challengeShortIntro;
+        this.challengeDescription = challengeDescription;
+        this.challengePublic = challengePublic;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.authTimeStart = authTimeStart;
+        this.authTimeEnd = authTimeEnd;
+        this.maxPeople = maxPeople;
+        this.nowPeople = nowPeople;
+        this.minDeposit = minDeposit;
+        this.returnType = returnType;
+        this.authFrequency = authFrequency;
+        this.inviteCode = inviteCode;
+        this.depositManageMethod = depositManageMethod;
+        this.authMethod = authMethod;
+        this.voteMethod = voteMethod;
+        this.createdAt = createdAt;
+    }
 
     public void updateChallenge(
             String name,
