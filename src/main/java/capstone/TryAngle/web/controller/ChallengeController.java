@@ -37,7 +37,7 @@ public class ChallengeController {
 
     // 챌린지 개별 조회
     @GetMapping("/{challengeId}")
-    public ApiResponse<?> getChallengeById( @PathVariable Integer challengeId){
+    public ApiResponse<?> getChallengeById( @PathVariable("challengeId") Integer challengeId){
         return  ApiResponse.onSuccess(SuccessStatus._OK, challengeService.getChallengeById(challengeId));
 
     }
