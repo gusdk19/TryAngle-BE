@@ -18,6 +18,7 @@ ErrorStatus implements BaseErrorCode {
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "COMMON4001", "인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON4003", "금지된 요청입니다."),
     MISSING_REQUIRED_VALUE(HttpStatus.BAD_REQUEST, "COMMON4000", "입력되지 않은 필수값이 있습니다."),
+    IMAGE_NOT_FOUND(HttpStatus.CONFLICT, "COMMON404" , "이미지가 필수입니다."),
 
     // 사용자 관련 응답
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER4004", "사용자를 찾을 수 없습니다."),

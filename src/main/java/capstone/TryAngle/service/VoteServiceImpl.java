@@ -56,16 +56,18 @@ public class VoteServiceImpl implements VoteService {
                 challengeId, todayStart, todayEnd
         );
 
-        List<Participation> participants = participationRepository.findAllByChallengeChallengeId(challengeId);
+        List<Participation> participations = participationRepository.findAllByChallengeChallengeId(challengeId);
 
         List<ChallengeResponseDTO.VoteStatusDTO> result = new ArrayList<>();
 
-        for (Participation p : participants) {
+        for (Participation p : participations) {
             if (p.getUser().getUserId().equals(user.getUserId())) continue;
             boolean voted = false;
+            String authImage = null;
 
             for (Auth auth : todayAuths) {
                 if (auth.getParticipation().getUser().getUserId().equals(p.getUser().getUserId())) {
+                    authImage = auth.getAuthImage();
                     // 내 투표가 존재하는지 확인
                     boolean hasVoted = voteRepository.existsByAuthAuthenticationIdAndUserUserId(
                             auth.getAuthenticationId(), user.getUserId()
@@ -79,7 +81,10 @@ public class VoteServiceImpl implements VoteService {
 
             result.add(ChallengeResponseDTO.VoteStatusDTO.builder()
                     .nickname(p.getUser().getNickname())
+                    .voter_id(p.getUser().getUserId())
+                    .profileImage(p.getUser().getProfileImage())
                     .voted(voted)
+                    .auth_image(authImage)
                     .build());
         }
 

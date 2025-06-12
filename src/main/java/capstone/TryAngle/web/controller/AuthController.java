@@ -1,6 +1,8 @@
 package capstone.TryAngle.web.controller;
 
 import capstone.TryAngle.common.ApiResponse;
+import capstone.TryAngle.common.GeneralException;
+import capstone.TryAngle.common.status.ErrorStatus;
 import capstone.TryAngle.common.status.SuccessStatus;
 import capstone.TryAngle.service.AuthService;
 import capstone.TryAngle.service.ChallengeService;
@@ -58,7 +60,8 @@ public class AuthController {
                 throw new RuntimeException("이미지 업로드 실패", e);
             }
         } else {
-            throw new IllegalArgumentException("이미지 파일은 필수입니다.");
+//            throw new IllegalArgumentException("이미지 파일은 필수입니다.");
+            throw new GeneralException(ErrorStatus.IMAGE_NOT_FOUND);
         }
 
 

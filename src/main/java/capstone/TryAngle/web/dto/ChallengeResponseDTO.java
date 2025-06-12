@@ -171,6 +171,9 @@ public class ChallengeResponseDTO {
     @Builder
     public static class VoteStatusDTO {
         private String nickname;
+        private Integer voter_id;
+        private String profileImage;
         private boolean voted;
+        private String auth_image;
     }
 }
