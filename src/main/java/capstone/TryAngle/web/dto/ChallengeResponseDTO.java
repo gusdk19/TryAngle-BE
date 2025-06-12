@@ -176,4 +176,24 @@ public class ChallengeResponseDTO {
         private boolean voted;
         private String auth_image;
     }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ChallengeSuccessRateDTO {
+
+        private double totalSuccessRate;
+
+        private List<CategorySuccessRateDTO> categorySuccessRate;
+
+        @Getter
+        @Builder
+        @AllArgsConstructor
+        @NoArgsConstructor
+        public static class CategorySuccessRateDTO {
+            private String category;
+            private double successRate;
+        }
+    }
 }

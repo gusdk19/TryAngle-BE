@@ -86,7 +86,7 @@ public class RankingServiceImpl implements RankingService {
     }
 
     private int getExpectedCount(Challenge challenge, Participation participation) {
-        LocalDate from = participation.getCreatedAt().toLocalDate();
+        LocalDate from = challenge.getStartDate();
         LocalDate to = challenge.getEndDate().isBefore(LocalDate.now()) ? challenge.getEndDate() : LocalDate.now();
 
         long days = from.datesUntil(to.plusDays(1)).count();

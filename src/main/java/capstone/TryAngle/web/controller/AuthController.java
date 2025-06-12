@@ -65,8 +65,8 @@ public class AuthController {
         }
 
 
-        authService.createAuth(email, createAuthDTO);
-        return ApiResponse.onSuccess(SuccessStatus.AUTH_CREATE_SUCCESS, null);
+
+        return ApiResponse.onSuccess(SuccessStatus.AUTH_CREATE_SUCCESS,   authService.createAuth(email, createAuthDTO));
     }
 
     // 인증 수정
@@ -107,6 +107,12 @@ public class AuthController {
         return ApiResponse.onSuccess(SuccessStatus._OK, authService.getAuthById(email, authenticationId));
     }
 
+    @GetMapping("/my/{challengeId}")
+    public ApiResponse<?> getMyAuth(@PathVariable("challengeId") Integer challengeId, @AuthenticationPrincipal User user){
+        String email =user.getUsername();
+        return ApiResponse.onSuccess(SuccessStatus._OK, authService.getMyAuth(email, challengeId));
+    }
+
     // 인증 전체 조회
     @GetMapping("/all/{challengeId}")
     public ApiResponse<?> getAllAuth(@PathVariable Integer challengeId, @AuthenticationPrincipal User user){
@@ -137,4 +143,7 @@ public class AuthController {
         authService.reactionAuth(email, authenticationId, reactionAuthDTO);
         return ApiResponse.onSuccess(SuccessStatus._OK, null);
     }
+
+
+
 }

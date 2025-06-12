@@ -30,4 +30,6 @@ public interface ChallengeService {
     void quitChallenge(Integer challengeId, String email);
 
     List<ChallengeResponseDTO.ChallengeDepositStatusDTO> getMyDepositStatus(String email);
+
+    ChallengeResponseDTO.ChallengeSuccessRateDTO getMySuccessRate(String email);
 }

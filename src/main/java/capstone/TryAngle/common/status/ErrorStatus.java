@@ -49,12 +49,15 @@ ErrorStatus implements BaseErrorCode {
     INVALID_INVITE_CODE(HttpStatus.CONFLICT, "PARTICIPATION409" , "잘못된 초대 코드 입니다." ),
     NOT_PARTICIPATING(HttpStatus.CONFLICT, "PARTICIPATION409" , "해당 챌린지에 참여하지 않은 유저입니다"),
     CHALLENGE_ALREADY_STARTED(HttpStatus.CONFLICT, "PARTICIPATION409" , "챌린지 시작 이후에는 참여 취소가 불가합니다."),
+    JOIN_TOO_LATE(HttpStatus.CONFLICT, "PARTICIPATION409" , "챌린지 시작 이후에는 참여 신청이 불가합니다."),
     LEADER_CANNOT_CANCEL_PARTICIPATION(HttpStatus.CONFLICT, "PARTICIPATION409" , "챌린지 리더는 참여 취소할 수 없습니다."),
 
     // 인증 관련 응답
     AUTH_NOT_FOUND(HttpStatus.CONFLICT, "AUTH404" , "해당 인증 내역을 찾을 수 없습니다."),
     ALREADY_VOTED(HttpStatus.CONFLICT, "AUTH409" , "이미 투표한 내역이 존재합니다."),
-    VOTE_NOT_FOUND(HttpStatus.CONFLICT, "AUTH404" , "아직 투표 내역이 존재하지 않습니다.");
+    VOTE_NOT_FOUND(HttpStatus.CONFLICT, "AUTH404" , "아직 투표 내역이 존재하지 않습니다."),
+    ALREADY_AUTH(HttpStatus.CONFLICT, "AUTH409" , "이미 인증한 내역이 존재합니다."),
+    NOT_AUTH_TIME(HttpStatus.CONFLICT, "AUTH409" , "인증 가능한 시간이 아닙니다.");
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;

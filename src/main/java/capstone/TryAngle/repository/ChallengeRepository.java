@@ -9,4 +9,8 @@ import java.util.List;
 public interface ChallengeRepository extends JpaRepository<Challenge, Integer> {
 
     List<Challenge> findAllByEndDate(LocalDate now);
+
+    List<Challenge> findAllByStartDate(LocalDate today);
+
+    List<Challenge> findAllByEndDateBefore(LocalDate today);
 }
