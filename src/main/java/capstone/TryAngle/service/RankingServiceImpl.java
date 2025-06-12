@@ -26,6 +26,7 @@ public class RankingServiceImpl implements RankingService {
     private final FollowRepository followRepository;
 
     public List<RankingResponseDTO> getAllRanking() {
+        List<User> allUsers = userRepository.findAll();
         List<Participation> participations = participationRepository.findAllWithChallengeAndAuth();
 
         Map<User, List<Participation>> userMap = participations.stream()
@@ -33,9 +34,8 @@ public class RankingServiceImpl implements RankingService {
 
         List<RankingResponseDTO> result = new ArrayList<>();
 
-        for (Map.Entry<User, List<Participation>> entry : userMap.entrySet()) {
-            User user = entry.getKey();
-            List<Participation> userParticipations = entry.getValue();
+        for (User user : allUsers) {
+            List<Participation> userParticipations = userMap.getOrDefault(user, Collections.emptyList());
 
             int totalExpected = 0;
             int totalSuccess = 0;
@@ -66,7 +66,7 @@ public class RankingServiceImpl implements RankingService {
 
         return result.stream()
                 .sorted(Comparator
-                        .comparingDouble(RankingResponseDTO::getSuccessRate).reversed()
+                        .comparingDouble(RankingResponseDTO::getSuccessRate)
                         .thenComparingInt(RankingResponseDTO::getChallengeCount).reversed()
                 )
                 .collect(Collectors.toList());
