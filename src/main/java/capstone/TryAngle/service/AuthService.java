@@ -13,7 +13,7 @@ public interface AuthService {
     void signup(UserRequestDTO.SignupRequestDTO request);
     UserResponseDTO.LoginResponseDTO login(String email, String rawPassword);
 
-    void createAuth(String email, AuthRequestDTO.createAuthDTO createAuthDTO);
+    AuthResponseDTO.createAuthDTO createAuth(String email, AuthRequestDTO.createAuthDTO createAuthDTO);
 
     void editAuth(Integer authenticationId, String email, AuthRequestDTO.editAuthDTO editAuthDTO);
 
@@ -26,4 +26,7 @@ public interface AuthService {
     void reactionAuth(String email, Integer authenticationId, AuthRequestDTO.reactionAuthDTO reactionAuthDTO);
 
     List<AuthResponseDTO.getAuthDTO> getAllAuth(String email, Integer challengeId);
+
+    AuthResponseDTO.getAuthDTO getMyAuth(String email, Integer challengeId);
 }
+

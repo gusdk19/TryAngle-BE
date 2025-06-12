@@ -19,7 +19,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -88,27 +92,49 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void createAuth(String email, AuthRequestDTO.createAuthDTO createAuthDTO) {
-
+    public AuthResponseDTO.createAuthDTO createAuth(String email, AuthRequestDTO.createAuthDTO createAuthDTO) {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
 
+        Participation participation = participationRepository
+                .findByUserUserIdAndChallengeChallengeId(user.getUserId(), createAuthDTO.getChallengeId());
 
-        Participation participation = participationRepository.findByUserUserIdAndChallengeChallengeId(user.getUserId(), createAuthDTO.getChallengeId());
         if (participation == null) {
             throw new GeneralException(ErrorStatus.NOT_PARTICIPATING);
         }
+
+        Challenge challenge = participation.getChallenge();
+
+        LocalTime nowTime = LocalTime.now();
+        if (nowTime.isBefore(challenge.getAuthTimeStart()) || nowTime.isAfter(challenge.getAuthTimeEnd())) {
+            throw new GeneralException(ErrorStatus.NOT_AUTH_TIME);
+        }
+
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+
+        boolean alreadyAuthenticated = authRepository.existsByParticipationParticipationIdAndCreatedAtBetween(
+                participation.getParticipationId(), startOfDay, endOfDay
+        );
+
+        if (alreadyAuthenticated) {
+            throw new GeneralException(ErrorStatus.ALREADY_AUTH);
+        }
+
         Auth auth = new Auth(
                 participation,
                 createAuthDTO.getAuthImage(),
                 createAuthDTO.getComment()
         );
 
-
-
         authRepository.save(auth);
+
+        return AuthResponseDTO.createAuthDTO.builder()
+                .authId(auth.getAuthenticationId())
+                .build();
     }
+
 
     @Override
     public void editAuth(Integer authenticationId, String email, AuthRequestDTO.editAuthDTO editAuthDTO) {
@@ -167,6 +193,45 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
+    @Override
+    public AuthResponseDTO.getAuthDTO getMyAuth(String email, Integer challengeId) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Participation participation = participationRepository
+                .findByUserUserIdAndChallengeChallengeId(user.getUserId(), challengeId);
+
+        if (participation == null) {
+            throw new GeneralException(ErrorStatus.NOT_PARTICIPATING);
+        }
+
+        // 오늘 날짜 기준 인증 검색
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+
+        List<Auth> auths = authRepository.findByParticipationParticipationIdAndCreatedAtBetween(
+                participation.getParticipationId(), startOfDay, endOfDay
+        );
+
+        if (auths.isEmpty()) {
+            throw new GeneralException(ErrorStatus.AUTH_NOT_FOUND);
+        }
+
+        Auth latestAuth = auths.get(0);
+
+        int voteCount = voteRepository.countByAuth_AuthenticationId(latestAuth.getAuthenticationId());
+
+        return AuthResponseDTO.getAuthDTO.builder()
+                .authId(latestAuth.getAuthenticationId())
+                .challengeId(challengeId)
+                .userNickname(user.getNickname())
+                .comment(latestAuth.getComment())
+                .authImage(latestAuth.getAuthImage())
+                .voteCount(voteCount)
+                .authSuccess(latestAuth.getAuthSuccess())
+                .createdAt(latestAuth.getCreatedAt())
+                .build();
+    }
 
 
     @Override
@@ -201,14 +266,16 @@ public class AuthServiceImpl implements AuthService {
             throw new GeneralException(ErrorStatus.NOT_PARTICIPATING);
         }
 
-        // 이미 투표했는지 확인
-        boolean alreadyVoted = voteRepository.existsByUserUserIdAndAuthAuthenticationId(user.getUserId(), authenticationId);
-        if (alreadyVoted) {
-            throw new GeneralException(ErrorStatus.ALREADY_VOTED);
-        }
+        // vote가 있는지 확인
+        Optional<Vote> optionalVote = voteRepository.findByUserAndAuth(user, auth);
 
-        // 투표 생성
-        Vote vote = new Vote(user, auth, voteAuthDTO.getVoteType());
+        Vote vote;
+        if (optionalVote.isPresent()) {
+            vote = optionalVote.get();
+            vote.setVoteType(voteAuthDTO.getVoteType());
+        } else {
+            vote = new Vote(user, auth, voteAuthDTO.getVoteType());
+        }
 
         voteRepository.save(vote);
         voteService.evaluateAuthSuccessAfterVoting(auth);
@@ -222,11 +289,23 @@ public class AuthServiceImpl implements AuthService {
 
         Auth auth = authRepository.findById(authenticationId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.AUTH_NOT_FOUND));
-        Vote vote = voteRepository.findByUserAndAuth(user, auth)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.VOTE_NOT_FOUND));
+
         Reaction reaction = Reaction.values()[reactionAuthDTO.getReactionId()];
-        vote.setReaction(reaction);
+
+        // vote가 있는지 확인
+        Optional<Vote> optionalVote = voteRepository.findByUserAndAuth(user, auth);
+
+        Vote vote;
+        if (optionalVote.isPresent()) {
+            vote = optionalVote.get();
+            vote.setReaction(reaction);
+        } else {
+            vote = new Vote(user, auth, null);
+            vote.setReaction(reaction);
+            voteRepository.save(vote);
+        }
     }
+
 
     @Override
     public List<AuthResponseDTO.getAuthDTO> getAllAuth(String email, Integer challengeId) {
@@ -254,5 +333,7 @@ public class AuthServiceImpl implements AuthService {
                         .build())
                 .collect(Collectors.toList());
     }
+
+
 
 }

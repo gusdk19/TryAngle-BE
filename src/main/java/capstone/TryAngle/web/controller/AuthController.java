@@ -1,6 +1,8 @@
 package capstone.TryAngle.web.controller;
 
 import capstone.TryAngle.common.ApiResponse;
+import capstone.TryAngle.common.GeneralException;
+import capstone.TryAngle.common.status.ErrorStatus;
 import capstone.TryAngle.common.status.SuccessStatus;
 import capstone.TryAngle.service.AuthService;
 import capstone.TryAngle.service.ChallengeService;
@@ -58,12 +60,13 @@ public class AuthController {
                 throw new RuntimeException("이미지 업로드 실패", e);
             }
         } else {
-            throw new IllegalArgumentException("이미지 파일은 필수입니다.");
+//            throw new IllegalArgumentException("이미지 파일은 필수입니다.");
+            throw new GeneralException(ErrorStatus.IMAGE_NOT_FOUND);
         }
 
 
-        authService.createAuth(email, createAuthDTO);
-        return ApiResponse.onSuccess(SuccessStatus.AUTH_CREATE_SUCCESS, null);
+
+        return ApiResponse.onSuccess(SuccessStatus.AUTH_CREATE_SUCCESS,   authService.createAuth(email, createAuthDTO));
     }
 
     // 인증 수정
@@ -104,6 +107,12 @@ public class AuthController {
         return ApiResponse.onSuccess(SuccessStatus._OK, authService.getAuthById(email, authenticationId));
     }
 
+    @GetMapping("/my/{challengeId}")
+    public ApiResponse<?> getMyAuth(@PathVariable("challengeId") Integer challengeId, @AuthenticationPrincipal User user){
+        String email =user.getUsername();
+        return ApiResponse.onSuccess(SuccessStatus._OK, authService.getMyAuth(email, challengeId));
+    }
+
     // 인증 전체 조회
     @GetMapping("/all/{challengeId}")
     public ApiResponse<?> getAllAuth(@PathVariable Integer challengeId, @AuthenticationPrincipal User user){
@@ -134,4 +143,7 @@ public class AuthController {
         authService.reactionAuth(email, authenticationId, reactionAuthDTO);
         return ApiResponse.onSuccess(SuccessStatus._OK, null);
     }
+
+
+
 }

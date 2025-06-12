@@ -179,5 +179,12 @@ public class ChallengeController {
         return ApiResponse.onSuccess(SuccessStatus._OK,voteService.getMyVoteStatus(challengeId, email));
     }
 
+    // 나의 챌린지 달성률 조회 (전체, 개별)
+    @GetMapping("/rate/total")
+    public ApiResponse<?> getMySuccessRate(
+            @AuthenticationPrincipal User loginUser) {
+        String email = loginUser.getUsername();
+        return ApiResponse.onSuccess(SuccessStatus._OK,challengeService.getMySuccessRate(email));
+    }
 
 }

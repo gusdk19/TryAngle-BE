@@ -35,8 +35,8 @@ public class Vote {
     @Column(name = "reaction", nullable = true)
     private Reaction reaction;
 
-    @Column(name="vote_type", nullable = false)
-    private Boolean voteType;   // approve, deny
+    @Column(name="vote_type", nullable = true)
+    private Boolean voteType;  // approve, deny
 
     @CreatedDate
     @Column(name="created_at", nullable = false)
@@ -54,6 +54,10 @@ public class Vote {
 
     public void setReaction(Reaction reaction) {
         this.reaction = reaction;
+    }
+
+    public void setVoteType(Boolean voteType) {
+        this.voteType = voteType;
     }
 
 }

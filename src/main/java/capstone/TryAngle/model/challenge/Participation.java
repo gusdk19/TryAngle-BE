@@ -76,5 +76,12 @@ public class Participation {
             this.depositReturnDate = LocalDate.now();
         }
 
+    }
+    public void setSuccess(){
+        this.participationSuccess=true;
+    }
 
-    }}
+    public void setStatus(int i) {
+        this.status = i;
+    }
+}

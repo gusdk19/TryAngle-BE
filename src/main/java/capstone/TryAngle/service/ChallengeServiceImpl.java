@@ -19,10 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -257,6 +254,10 @@ public class ChallengeServiceImpl implements ChallengeService {
         Challenge challenge = challengeRepository.findById(challengeId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.CHALLENGE_NOT_FOUND));
 
+        if (!challenge.getStartDate().isAfter(LocalDate.now())) {
+            throw new GeneralException(ErrorStatus.JOIN_TOO_LATE);
+        }
+
         // 비공개 챌린지라면 초대 코드
         if (!challenge.getChallengePublic()) {
             if (inviteCode == null || !inviteCode.equals(challenge.getInviteCode())) {
@@ -276,6 +277,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         if (challenge.getNowPeople() != null && challenge.getNowPeople() >= challenge.getMaxPeople()) {
             throw new GeneralException(ErrorStatus.CHALLENGE_FULL);
         }
+
 
         // 최소 예치금 조건
         if (deposit < challenge.getMinDeposit()) {
@@ -308,9 +310,40 @@ public class ChallengeServiceImpl implements ChallengeService {
         user.updateChallengeMoney(currentChallengeMoney+deposit);
     }
 
+    @Scheduled(cron = "0 0 0 * * *") // 매일 자정
+    public void autoUpdateChallengeStatus() {
+        System.out.println("챌린지 상태 스케줄러");
+
+        LocalDate today = LocalDate.now();
+
+        // 오늘 시작하는 챌린지들
+        List<Challenge> startingChallenges = challengeRepository.findAllByStartDate(today);
+
+        for (Challenge challenge : startingChallenges) {
+            List<Participation> participants = participationRepository.findAllByChallengeChallengeId(challenge.getChallengeId());
+            for (Participation p : participants) {
+                if (p.getStatus() == 0) { // ready → progress
+                    p.setStatus(1);
+                }
+            }
+        }
+
+        // 오늘 기준으로 종료된 챌린지들의 참여자 상태도 완료로 갱신
+        List<Challenge> endingChallenges = challengeRepository.findAllByEndDateBefore(today);
+        for (Challenge challenge : endingChallenges) {
+            List<Participation> participants = participationRepository.findAllByChallengeChallengeId(challenge.getChallengeId());
+            for (Participation p : participants) {
+                if (p.getStatus() != 2) {
+                    p.setStatus(2);
+                }
+            }
+        }
+    }
+
 
     @Scheduled(cron = "0 0 0 * * *") // 매일 자정
     public void autoEndChallenges() {
+        System.out.println("스케쥴링");
         List<Challenge> endingChallenges = challengeRepository
                 .findAllByEndDate(LocalDate.now());
 
@@ -321,35 +354,74 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Override
     public void endChallenge(Integer challengeId) {
-
         Challenge challenge = challengeRepository.findById(challengeId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.CHALLENGE_NOT_FOUND));
+
         Boolean isDonation = challenge.getReturnType();  // true: 기부, false: 환급
+        List<Participation> participations = participationRepository.findAllByChallengeChallengeId(challengeId);
 
-        List<Participation> participations = participationRepository
-                .findAllByChallengeChallengeId(challengeId);
+        int alphaPool = 0;
+        List<Participation> fullySuccessParticipants = new ArrayList<>();
 
+        // 1. 참여자별 달성률 및 기본 환급 처리
         for (Participation participation : participations) {
-            // 상태 종료로 변경
-            participation.markAsCompleted();
+            int expected = getExpectedCount(challenge, participation);
+            long success = participation.getAuthList().stream()
+                    .filter(Auth::getAuthSuccess)
+                    .count();
 
-            // 성공한 경우만 처리
-            if (Boolean.TRUE.equals(participation.getParticipationSuccess())) {
-                int depositAmount = participation.getDepositAmount();
-                User participant = participation.getUser();
+            double rate = expected > 0 ? (double) success / expected : 0.0;
+            System.out.println("성공률"+ expected + "suc" + success + "rate: "+ rate);
+            int deposit = participation.getDepositAmount();
+            int refundAmount = 0;
 
-                // 입금 상태 처리 (donated / refunded)
-                participation.returnDeposit(isDonation);
+            if (rate >= 0.9) {
+                participation.setSuccess();
+                refundAmount = deposit;
 
-                if (!isDonation) {
-                    // 환급인 경우만 돈 처리
-                    participant.updateChallengeMoney(participant.getChallengeMoney() - depositAmount);
-                    participant.updateReturnMoney(depositAmount); // returnMoney += depositAmount
-
+                // 100% 성공한 사람 저장 (추후 α 분배 대상)
+                if (rate == 1.0) {
+                    fullySuccessParticipants.add(participation);
                 }
+
+            } else if (rate >= 0.5) {
+                participation.setSuccess();
+                refundAmount = (int) Math.round(deposit * rate);
+            } else {
+                refundAmount = 0;
+            }
+
+            // 2. 종료 처리
+            participation.markAsCompleted();
+            participation.returnDeposit(isDonation);
+
+            // 3. 금액 처리 (기부 아닐 때만)
+            if (!isDonation) {
+                User user = participation.getUser();
+                user.updateChallengeMoney(user.getChallengeMoney() - deposit);
+
+                // 환급
+                if (refundAmount > 0) {
+                    user.updateReturnMoney(user.getReturnMoney() + refundAmount);
+                }
+
+                // α 풀 계산
+                alphaPool += (deposit - refundAmount);
+            }
+        }
+
+        // 4. α 정산 (기부 아님 + 100% 성공자 있음)
+        if (!isDonation && alphaPool > 0 && !fullySuccessParticipants.isEmpty()) {
+            int share = alphaPool / fullySuccessParticipants.size();
+            for (Participation p : fullySuccessParticipants) {
+                User user = p.getUser();
+                user.updateReturnMoney(user.getReturnMoney() + share);
             }
         }
     }
+
+
+
 
     @Override
     public ChallengeResponseDTO.createInviteCodeDTO createInviteCode(String inviteCode, Integer challengeId, String email) {
@@ -417,7 +489,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         return participations.stream()
                 .map(p -> {
                     Integer depositAmount = p.getDepositAmount() != null ? p.getDepositAmount() : 0;
-                    Integer status = p.getStatus();
+                    Integer status = p.getDepositStatus();
 
                     int refundAmount = (status != null && status == 0) ? depositAmount : 0;
 
@@ -435,6 +507,59 @@ public class ChallengeServiceImpl implements ChallengeService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public ChallengeResponseDTO.ChallengeSuccessRateDTO getMySuccessRate(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        List<Participation> userParticipations = participationRepository.findAllByUserUserId(user.getUserId());
+
+        int totalExpected = 0;
+        int totalSuccess = 0;
+        Map<Category, Integer> expectedPerCategory = new HashMap<>();
+        Map<Category, Integer> successPerCategory = new HashMap<>();
+        for (Participation p : userParticipations) {
+            Challenge challenge = p.getChallenge();
+            int expected = getExpectedCount(challenge, p);
+            long success = p.getAuthList().stream()
+                    .filter(Auth::getAuthSuccess)
+                    .count();
+
+            totalExpected += expected;
+            totalSuccess += Math.min((int) success, expected);
+
+            expectedPerCategory.merge(challenge.getCategory(), expected, Integer::sum);
+            successPerCategory.merge(challenge.getCategory(), Math.min((int) success, expected), Integer::sum);
+        }
+
+        double totalSuccessRate = (totalExpected > 0)
+                ? Math.round((totalSuccess * 1000.0 / totalExpected)) / 10.0
+                : 0.0;
+
+
+        List<ChallengeResponseDTO.ChallengeSuccessRateDTO.CategorySuccessRateDTO> categoryRates = new ArrayList<>();
+        for (Category category : expectedPerCategory.keySet()) {
+            int expected = expectedPerCategory.get(category);
+            int success = successPerCategory.getOrDefault(category, 0);
+
+            double rate = (expected > 0)
+                    ? Math.round((success * 1000.0 / expected)) / 10.0
+                    : 0.0;
+
+            categoryRates.add(ChallengeResponseDTO.ChallengeSuccessRateDTO.CategorySuccessRateDTO.builder()
+                    .category(category.name())  // 필요시 한글로 매핑 가능
+                    .successRate(rate)
+                    .build());
+        }
+
+        return ChallengeResponseDTO.ChallengeSuccessRateDTO.builder()
+                .totalSuccessRate(totalSuccessRate)
+                .categorySuccessRate(categoryRates)
+                .build();
+    }
+
+
+
     private String convertStatusToString    (Integer statusCode) {
         return switch (statusCode) {
             case 0 -> "refunded";
@@ -444,6 +569,31 @@ public class ChallengeServiceImpl implements ChallengeService {
         };
     }
 
+    private int getExpectedCount(Challenge challenge, Participation participation) {
+        LocalDate from = challenge.getStartDate();
+        LocalDate to = challenge.getEndDate().isBefore(LocalDate.now()) ? challenge.getEndDate() : LocalDate.now();
+
+        long days = from.datesUntil(to.plusDays(1)).count();
+        double ratio = getWeeklyRatio(challenge.getAuthFrequency());
+
+        System.out.println("From "+from+"to "+to+ "days "+ days+ "ratio "+ratio);
+        return (int) Math.round(days * ratio);
+    }
+
+    private double getWeeklyRatio(String freq) {
+        return switch (freq.trim()) {
+            case "매일" -> 1.0;
+            case "평일 매일" -> 5.0 / 7.0;
+            case "주말 매일" -> 2.0 / 7.0;
+            case "주 1일" -> 1.0 / 7.0;
+            case "주 2일" -> 2.0 / 7.0;
+            case "주 3일" -> 3.0 / 7.0;
+            case "주 4일" -> 4.0 / 7.0;
+            case "주 5일" -> 5.0 / 7.0;
+            case "주 6일" -> 6.0 / 7.0;
+            default -> 0.0;
+        };
+    }
 
 }
 

@@ -34,4 +34,14 @@ public class AuthResponseDTO {
 
     }
 
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class createAuthDTO {
+        @JsonProperty("auth_id")
+       private Integer authId;
+
+    }
+
 }
