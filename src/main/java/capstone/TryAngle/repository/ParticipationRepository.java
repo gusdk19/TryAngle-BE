@@ -18,4 +18,10 @@ public interface ParticipationRepository extends JpaRepository<Participation, In
     List<Participation> findAllByChallengeChallengeId(Integer challengeId);
 
     int countByChallengeChallengeId(Integer challengeId);
+
+    @Query("SELECT DISTINCT p FROM Participation p " +
+            "JOIN FETCH p.challenge c " +
+            "LEFT JOIN FETCH p.authList a")
+    List<Participation> findAllWithChallengeAndAuth();
+
 }
