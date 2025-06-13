@@ -66,6 +66,7 @@ public class ChallengeConverter {
                 .authMethod(challenge.getAuthMethod())
                 .voteMethod(challenge.getVoteMethod())
                 .leaderNickname(challenge.getLeader().getNickname())
+                .inviteCode(challenge.getInviteCode())
                 .participantList(participantIds)
                 .build();
 
