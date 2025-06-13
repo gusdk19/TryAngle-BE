@@ -71,4 +71,10 @@ public class UserResponseDTO {
     public static class FindIdResponseDTO {
         private String email;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class FollowResponseDTO {
+        private String message;
+    }
 }
