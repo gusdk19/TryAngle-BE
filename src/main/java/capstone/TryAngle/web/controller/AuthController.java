@@ -71,7 +71,7 @@ public class AuthController {
 
     // 인증 수정
     @PutMapping("/{authenticationId}")
-    public ApiResponse<?> editAuth(@PathVariable Integer authenticationId,
+    public ApiResponse<?> editAuth(@PathVariable("authenticationId") Integer authenticationId,
                                    @RequestPart("authData") AuthRequestDTO.editAuthDTO editAuthDTO,
                                    @RequestPart(value = "authImage", required = false) MultipartFile imageFile,
                                    @AuthenticationPrincipal User user) {
@@ -102,7 +102,7 @@ public class AuthController {
 
     // 인증 개별 조회
     @GetMapping("/{authenticationId}")
-    public ApiResponse<?> getAuthById(@PathVariable Integer authenticationId, @AuthenticationPrincipal User user){
+    public ApiResponse<?> getAuthById(@PathVariable("authenticationId") Integer authenticationId, @AuthenticationPrincipal User user){
         String email =user.getUsername();
         return ApiResponse.onSuccess(SuccessStatus._OK, authService.getAuthById(email, authenticationId));
     }
@@ -115,14 +115,14 @@ public class AuthController {
 
     // 인증 전체 조회
     @GetMapping("/all/{challengeId}")
-    public ApiResponse<?> getAllAuth(@PathVariable Integer challengeId, @AuthenticationPrincipal User user){
+    public ApiResponse<?> getAllAuth(@PathVariable("challengeId") Integer challengeId, @AuthenticationPrincipal User user){
         String email =user.getUsername();
         return ApiResponse.onSuccess(SuccessStatus._OK, authService.getAllAuth(email, challengeId));
     }
 
     // 인증 삭제
     @DeleteMapping("/{authenticationId}")
-    public ApiResponse<?> deleteAuth(@PathVariable Integer authenticationId, @AuthenticationPrincipal User user){
+    public ApiResponse<?> deleteAuth(@PathVariable("authenticationId") Integer authenticationId, @AuthenticationPrincipal User user){
         String email =user.getUsername();
         authService.deleteAuth(email, authenticationId);
         return ApiResponse.onSuccess(SuccessStatus._OK, null);
@@ -130,7 +130,7 @@ public class AuthController {
 
     // 인증 투표
     @PostMapping("/{authenticationId}/vote")
-    public ApiResponse<?> voteAuth(@PathVariable Integer authenticationId, @AuthenticationPrincipal User user, @RequestBody AuthRequestDTO.voteAuthDTO voteAuthDTO){
+    public ApiResponse<?> voteAuth(@PathVariable("authenticationId") Integer authenticationId, @AuthenticationPrincipal User user, @RequestBody AuthRequestDTO.voteAuthDTO voteAuthDTO){
         String email =user.getUsername();
         authService.voteAuth(email, authenticationId, voteAuthDTO);
         return ApiResponse.onSuccess(SuccessStatus._OK, null);
@@ -138,7 +138,7 @@ public class AuthController {
 
     // 인증 리액션
     @PostMapping("/{authenticationId}/reaction")
-    public ApiResponse<?> reactionAuth(@PathVariable Integer authenticationId, @AuthenticationPrincipal User user, @RequestBody AuthRequestDTO.reactionAuthDTO reactionAuthDTO){
+    public ApiResponse<?> reactionAuth(@PathVariable("authenticationId") Integer authenticationId, @AuthenticationPrincipal User user, @RequestBody AuthRequestDTO.reactionAuthDTO reactionAuthDTO){
         String email =user.getUsername();
         authService.reactionAuth(email, authenticationId, reactionAuthDTO);
         return ApiResponse.onSuccess(SuccessStatus._OK, null);
