@@ -22,6 +22,21 @@ public class NotificationResponseDTO {
 
     @Getter
     @AllArgsConstructor
+    public static class AllChallengeNotificationsDTO {
+        private Integer notificationId;
+        private NotificationType notificationType;
+        private String receiverNickname;
+        private String senderNickname;
+        private Boolean isRead;
+        private LocalDateTime createdAt;
+        private String message;
+        private Integer challengeId;
+        private String challengeName;
+        private String inviteCode;
+    }
+
+    @Getter
+    @AllArgsConstructor
     public static class ChallengeNotificationsDTO {
         private Integer challengeId;
         private String challengeName;

@@ -34,13 +34,22 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<NotificationResponseDTO.AllNotificationsDTO> getNotifications(String email) {
+    public List<?> getNotifications(String email) {
         User receiver = findUserByEmail(email);
 
         List<Notification> notifications = notificationRepository.findAllByReceiver(receiver);
 
         return notifications.stream()
-                .map(NotificationConverter::toAllNotificationsDTO)
+                .map(notification -> {
+                    if (notification.getNotificationType() == NotificationType.CHALLENGE_INVITE) {
+                        Integer challengeId = notification.getChallengeId();
+                        Challenge challenge = challengeRepository.findById(challengeId)
+                                .orElseThrow(()->new GeneralException(ErrorStatus.CHALLENGE_NOT_FOUND));
+                        return NotificationConverter.toAllChallengeNotificationsDTO(notification, challenge);
+                    } else {
+                        return NotificationConverter.toAllNotificationsDTO(notification);
+                    }
+                })
                 .collect(Collectors.toList());
     }
 
