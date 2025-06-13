@@ -79,6 +79,9 @@ public class ChallengeResponseDTO {
         @JsonProperty("leader_nickname")
         private String leaderNickname;
 
+        @JsonProperty("invite_code")
+        private String inviteCode;
+
         @JsonProperty("participant_list")
         private List<Integer> participantList;
     }
