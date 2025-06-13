@@ -161,6 +161,12 @@ public class ChallengeServiceImpl implements ChallengeService {
         User leader = userRepository.findByEmail(email)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
 
+        if (Boolean.FALSE.equals(createChallengeDTO.getChallengePublic())) {
+            if (createChallengeDTO.getInviteCode() == null || createChallengeDTO.getInviteCode().isBlank()) {
+                throw new GeneralException(ErrorStatus.INVITE_CODE_REQUIRED);
+            }
+        }
+
 
         Challenge challenge = new Challenge(
                 null,
@@ -180,10 +186,11 @@ public class ChallengeServiceImpl implements ChallengeService {
                 createChallengeDTO.getMinDeposit(),
                 createChallengeDTO.getReturnType(),
                 createChallengeDTO.getAuthFrequency(),
-                null, // invite_code
+                createChallengeDTO.getInviteCode(), // invite_code
                 createChallengeDTO.getDepositManageMethod(),
                 createChallengeDTO.getAuthMethod(),
                 createChallengeDTO.getVoteMethod(),
+
                 null // createdAt
         );
 

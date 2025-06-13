@@ -191,7 +191,7 @@ public class ChallengeController {
     // 나의 캘린더 조회
     @GetMapping("/calendar")
     public ApiResponse<?> getChallengeCalendar(
-            @RequestParam String ym,
+            @RequestParam("ym") String ym,
             @AuthenticationPrincipal User loginUser
     ) {
         String email = loginUser.getUsername();

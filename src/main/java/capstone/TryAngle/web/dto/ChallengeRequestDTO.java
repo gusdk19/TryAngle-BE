@@ -66,6 +66,11 @@ public class ChallengeRequestDTO {
         @JsonProperty("vote_method")
         private String voteMethod;
 
+        @JsonProperty("invite_code")
+        private String inviteCode;
+
+
+
         public void setChallengeThumbnail(String challengeThumbnail) {
             this.challengeThumbnail = challengeThumbnail;
         }
