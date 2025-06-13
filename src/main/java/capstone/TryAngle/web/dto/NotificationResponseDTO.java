@@ -19,4 +19,13 @@ public class NotificationResponseDTO {
         private LocalDateTime createdAt;
         private String message;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class ChallengeNotificationsDTO {
+        private Integer challengeId;
+        private String challengeName;
+        private String inviteCode;
+        private String message;
+    }
 }

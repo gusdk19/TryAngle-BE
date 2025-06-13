@@ -55,7 +55,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void challengeInviteNotification(NotificationRequestDTO.InviteRequestDTO inviteDto) {
+    public NotificationResponseDTO.ChallengeNotificationsDTO challengeInviteNotification(NotificationRequestDTO.InviteRequestDTO inviteDto) {
         User sender = userRepository.findById(Long.valueOf(inviteDto.getSenderId()))
                 .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
 
@@ -82,5 +82,12 @@ public class NotificationServiceImpl implements NotificationService {
                 .build();
 
         notificationRepository.save(notification);
+
+        return new NotificationResponseDTO.ChallengeNotificationsDTO(
+                challenge.getChallengeId(),
+                challenge.getChallengeName(),
+                challenge.getInviteCode(),
+                message
+        );
     }
 }
