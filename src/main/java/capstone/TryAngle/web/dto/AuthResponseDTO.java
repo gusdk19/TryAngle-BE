@@ -6,7 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class AuthResponseDTO {
 
@@ -44,4 +46,13 @@ public class AuthResponseDTO {
 
     }
 
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class  AuthCalendarDTO {
+        private String yearMonth;
+        private List<String> authDates;
+    }
 }

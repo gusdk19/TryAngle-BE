@@ -8,6 +8,7 @@ import capstone.TryAngle.model.challenge.Participation;
 import capstone.TryAngle.model.user.User;
 import capstone.TryAngle.repository.*;
 import capstone.TryAngle.web.converter.ChallengeConverter;
+import capstone.TryAngle.web.dto.AuthResponseDTO;
 import capstone.TryAngle.web.dto.ChallengeRequestDTO;
 import capstone.TryAngle.web.dto.ChallengeResponseDTO;
 import capstone.TryAngle.common.status.ErrorStatus;
@@ -558,6 +559,37 @@ public class ChallengeServiceImpl implements ChallengeService {
                 .build();
     }
 
+    @Override
+    public AuthResponseDTO.AuthCalendarDTO getChallengeCalendar(String email,String ym) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+
+        if (ym == null || ym.length() != 6) {
+            throw new GeneralException(ErrorStatus._BAD_REQUEST);
+        }
+        int year = Integer.parseInt(ym.substring(0, 4));
+        int month = Integer.parseInt(ym.substring(4, 6));
+
+        LocalDate start = LocalDate.of(year, month, 1);
+        LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
+        List<Auth> auths = authRepository
+                .findAllByUserAndAuthSuccessTrueAndCreatedAtBetween(
+                        user.getUserId(),
+                        start.atStartOfDay(),
+                        end.plusDays(1).atStartOfDay()
+                );
+
+        List<String> authDates = auths.stream()
+                .map(auth -> auth.getCreatedAt().toLocalDate().toString())
+                .distinct()
+                .collect(Collectors.toList());
+
+        return AuthResponseDTO.AuthCalendarDTO.builder()
+                .yearMonth(ym)
+                .authDates(authDates)
+                .build();
+    }
 
 
     private String convertStatusToString    (Integer statusCode) {

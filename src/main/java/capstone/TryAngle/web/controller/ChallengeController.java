@@ -4,6 +4,7 @@ import capstone.TryAngle.common.ApiResponse;
 import capstone.TryAngle.common.status.SuccessStatus;
 import capstone.TryAngle.service.ChallengeService;
 import capstone.TryAngle.service.VoteService;
+import capstone.TryAngle.web.dto.AuthResponseDTO;
 import capstone.TryAngle.web.dto.ChallengeRequestDTO;
 import capstone.TryAngle.web.dto.ChallengeResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -185,6 +186,16 @@ public class ChallengeController {
             @AuthenticationPrincipal User loginUser) {
         String email = loginUser.getUsername();
         return ApiResponse.onSuccess(SuccessStatus._OK,challengeService.getMySuccessRate(email));
+    }
+
+    // 나의 캘린더 조회
+    @GetMapping("/calendar")
+    public ApiResponse<?> getChallengeCalendar(
+            @RequestParam String ym,
+            @AuthenticationPrincipal User loginUser
+    ) {
+        String email = loginUser.getUsername();
+        return ApiResponse.onSuccess(SuccessStatus._OK,challengeService.getChallengeCalendar(email, ym));
     }
 
 }
