@@ -40,6 +40,7 @@ ErrorStatus implements BaseErrorCode {
     CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND, "CHALLENGE404", "챌린지 정보가 존재하지 않습니다"),
     NOT_LEADER(HttpStatus.CONFLICT, "CHALLENGE4009", "리더가 아닙니다."),
     CHALLENGE_PUBLIC(HttpStatus.CONFLICT, "CHALLENGE4009", "공개 챌린지입니다. 초대코드가 필요 없습니다."),
+    INVITE_CODE_REQUIRED(HttpStatus.CONFLICT, "CHALLENGE4009", "비공개 챌린지를 생성하려면 초대코드를 입력하세요."),
 
     // 참여 관련 응답
     PARTICIPATION_NOT_FOUND(HttpStatus.NOT_FOUND, "PARTICIPATION404" ,"해당 챌린지에 해당 유저가 참여한 정보가 없습니다." ),
@@ -58,6 +59,7 @@ ErrorStatus implements BaseErrorCode {
     VOTE_NOT_FOUND(HttpStatus.CONFLICT, "AUTH404" , "아직 투표 내역이 존재하지 않습니다."),
     ALREADY_AUTH(HttpStatus.CONFLICT, "AUTH409" , "이미 인증한 내역이 존재합니다."),
     NOT_AUTH_TIME(HttpStatus.CONFLICT, "AUTH409" , "인증 가능한 시간이 아닙니다.");
+
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
