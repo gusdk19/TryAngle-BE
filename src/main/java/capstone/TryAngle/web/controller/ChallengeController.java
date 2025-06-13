@@ -52,7 +52,7 @@ public class ChallengeController {
 
     // 나의 챌린지 참여 내역 개별 조회
     @GetMapping("/my/{challengeId}")
-    public ApiResponse<?> getMyChallengeStatus( @AuthenticationPrincipal User loginUser,  @PathVariable Integer challengeId){
+    public ApiResponse<?> getMyChallengeStatus( @AuthenticationPrincipal User loginUser,  @PathVariable("challengeId") Integer challengeId){
         String email = loginUser.getUsername();
         return ApiResponse.onSuccess(SuccessStatus._OK, challengeService.getMyChallengeStatus(email, challengeId));
 
@@ -60,7 +60,7 @@ public class ChallengeController {
 
     // 챌린지 삭제
     @DeleteMapping("/{challengeId}")
-    public ApiResponse deleteChallenge(@PathVariable Integer challengeId, @AuthenticationPrincipal User loginUser ){
+    public ApiResponse deleteChallenge(@PathVariable("challengeId") Integer challengeId, @AuthenticationPrincipal User loginUser ){
         String email = loginUser.getUsername();
         challengeService.deleteChallenge(challengeId, email);
         return ApiResponse.onSuccess(SuccessStatus.DELETE_SUCCESS, null);
@@ -103,7 +103,7 @@ public class ChallengeController {
     // 챌린지 수정
     @PutMapping(value = "/{challengeId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<?> updateChallenge(
-            @PathVariable Integer challengeId,
+            @PathVariable("challengeId") Integer challengeId,
             @RequestPart("challengeData") ChallengeRequestDTO.createChallengeDTO updateChallengeDTO,
             @RequestPart(value = "thumbnailImage", required = false) MultipartFile imageFile,
             @AuthenticationPrincipal User loginUser) {
@@ -174,7 +174,7 @@ public class ChallengeController {
     // 챌린지 팀원 투표 현황 리스트로 조회
     @GetMapping("/{challengeId}/users/vote")
     public ApiResponse<?> getMyVoteStatus(
-            @PathVariable Integer challengeId,
+            @PathVariable("challengeId") Integer challengeId,
             @AuthenticationPrincipal User loginUser) {
         String email = loginUser.getUsername();
         return ApiResponse.onSuccess(SuccessStatus._OK,voteService.getMyVoteStatus(challengeId, email));
