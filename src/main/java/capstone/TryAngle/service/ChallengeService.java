@@ -1,5 +1,6 @@
 package capstone.TryAngle.service;
 
+import capstone.TryAngle.web.dto.AuthResponseDTO;
 import capstone.TryAngle.web.dto.ChallengeRequestDTO;
 import capstone.TryAngle.web.dto.ChallengeResponseDTO;
 import capstone.TryAngle.web.dto.ParticipationResponseDTO;
@@ -32,4 +33,6 @@ public interface ChallengeService {
     List<ChallengeResponseDTO.ChallengeDepositStatusDTO> getMyDepositStatus(String email);
 
     ChallengeResponseDTO.ChallengeSuccessRateDTO getMySuccessRate(String email);
+
+    AuthResponseDTO.AuthCalendarDTO getChallengeCalendar(String email, String ym);
 }
