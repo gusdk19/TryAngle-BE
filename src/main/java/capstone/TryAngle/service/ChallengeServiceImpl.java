@@ -168,6 +168,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         }
 
 
+
         // 최소 예치금 조건
         if (deposit < createChallengeDTO.getMinDeposit()) {
             throw new GeneralException(ErrorStatus.DEPOSIT_TOO_SMALL);
@@ -176,6 +177,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         if (createChallengeDTO.getStartDate().isAfter(createChallengeDTO.getEndDate())){
             throw new GeneralException(ErrorStatus.WRONG_DATE);
         }
+
 
         Challenge challenge = new Challenge(
                 null,

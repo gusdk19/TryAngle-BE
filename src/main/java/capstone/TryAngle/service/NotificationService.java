@@ -6,7 +6,7 @@ import capstone.TryAngle.web.dto.NotificationResponseDTO;
 import java.util.List;
 
 public interface NotificationService {
-    List<NotificationResponseDTO.AllNotificationsDTO> getNotifications(String email);
+    List<?> getNotifications(String email);
     void markAsRead(Integer notificationId);
-    void challengeInviteNotification(NotificationRequestDTO.InviteRequestDTO inviteDto);
+    NotificationResponseDTO.ChallengeNotificationsDTO challengeInviteNotification(NotificationRequestDTO.InviteRequestDTO inviteDto);
 }

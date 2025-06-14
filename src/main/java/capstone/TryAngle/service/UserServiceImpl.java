@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void follow(String email, String followeeNickname) {
+    public UserResponseDTO.FollowResponseDTO follow(String email, String followeeNickname) {
         if (followeeNickname == null || followeeNickname.isBlank()) {
             throw new GeneralException(ErrorStatus.MISSING_REQUIRED_VALUE);
         }
@@ -109,6 +109,10 @@ public class UserServiceImpl implements UserService {
         );
 
         notificationRepository.save(notification);
+
+        return new UserResponseDTO.FollowResponseDTO(
+                message
+        );
     }
 
     @Override

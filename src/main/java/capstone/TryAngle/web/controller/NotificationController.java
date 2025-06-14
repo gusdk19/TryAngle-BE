@@ -30,7 +30,6 @@ public class NotificationController {
 
     @PostMapping("/invite/notification")
     public ApiResponse<?> inviteNotification(@RequestBody NotificationRequestDTO.InviteRequestDTO inviteDto) {
-        notificationService.challengeInviteNotification(inviteDto);
-        return ApiResponse.onSuccess(SuccessStatus.CHALLENGE_NOTIFICATION_SUCCESS, null);
+        return ApiResponse.onSuccess(SuccessStatus.CHALLENGE_NOTIFICATION_SUCCESS, notificationService.challengeInviteNotification(inviteDto));
     }
 }
