@@ -3,7 +3,9 @@ spring:
     name: TryAngle
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/tryangle
+#    url: jdbc:mysql://localhost:3306/tryangle
+    url: jdbc:mysql://tryangle-db.c5ksqseqwssi.ap-northeast-2.rds.amazonaws.com:3306/tryangle
+
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   jpa:
