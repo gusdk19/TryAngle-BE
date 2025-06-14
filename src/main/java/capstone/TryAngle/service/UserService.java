@@ -12,7 +12,7 @@ public interface UserService {
     void modifyDescription(String email, UserRequestDTO.ModifyUserRequestDTO userDto);
     List<UserResponseDTO.FollowingsDTO> getUserFollowings(String email);
     List<UserResponseDTO.FollowersDTO> getUserFollowers(String email);
-    void follow(String email, String followeeNickname);
+    UserResponseDTO.FollowResponseDTO follow(String email, String followeeNickname);
     void unfollow(String email, String followeeNickname);
     List<UserResponseDTO.AllUsersDTO> getAllUsers(String email);
     void report(String email, UserRequestDTO.ReportRequestDTO reportDTO);
