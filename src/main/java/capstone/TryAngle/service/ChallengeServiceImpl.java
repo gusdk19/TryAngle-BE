@@ -633,10 +633,13 @@ public class ChallengeServiceImpl implements ChallengeService {
         LocalDate from = challenge.getStartDate();
         LocalDate to = challenge.getEndDate().isBefore(LocalDate.now()) ? challenge.getEndDate() : LocalDate.now();
 
+        if (from.isAfter(to)) {
+            return 0;
+        }
+
         long days = from.datesUntil(to.plusDays(1)).count();
         double ratio = getWeeklyRatio(challenge.getAuthFrequency());
 
-        System.out.println("From "+from+"to "+to+ "days "+ days+ "ratio "+ratio);
         return (int) Math.round(days * ratio);
     }
 
