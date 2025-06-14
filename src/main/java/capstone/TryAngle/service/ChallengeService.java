@@ -22,7 +22,7 @@ public interface ChallengeService {
 
     void updateChallenge(Integer challengeId, ChallengeRequestDTO.createChallengeDTO createChallengeDTO, String email);
 
-    void joinChallenge(Integer challengeId, Integer deposit, String inviteCode, String email);
+    void joinChallenge(Integer challengeId, Integer deposit, String email);
 
     void endChallenge(Integer challengeId);
 
@@ -35,4 +35,6 @@ public interface ChallengeService {
     ChallengeResponseDTO.ChallengeSuccessRateDTO getMySuccessRate(String email);
 
     AuthResponseDTO.AuthCalendarDTO getChallengeCalendar(String email, String ym);
+
+    void verifyInviteCode(Integer challengeId, String inviteCode, String email);
 }

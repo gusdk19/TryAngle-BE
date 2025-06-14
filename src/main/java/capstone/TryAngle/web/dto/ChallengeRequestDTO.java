@@ -84,7 +84,7 @@ public class ChallengeRequestDTO {
     public static class joinChallengeDTO {
         private Integer challengeId;
         private Integer deposit;
-        private String inviteCode;
+//        private String inviteCode;
     }
 
     @Getter
@@ -124,5 +124,18 @@ public class ChallengeRequestDTO {
     public static class quitChallengeDTO {
         @JsonProperty("challenge_id")
         private Integer challengeId;
+    }
+
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class verifyInviteCodeDTO{
+        @JsonProperty("challenge_id")
+        private Integer challengeId;
+
+        @JsonProperty("invite_code")
+        private String inviteCode;
     }
 }

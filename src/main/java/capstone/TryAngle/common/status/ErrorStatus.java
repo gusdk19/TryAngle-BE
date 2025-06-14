@@ -58,7 +58,8 @@ ErrorStatus implements BaseErrorCode {
     ALREADY_VOTED(HttpStatus.CONFLICT, "AUTH409" , "이미 투표한 내역이 존재합니다."),
     VOTE_NOT_FOUND(HttpStatus.CONFLICT, "AUTH404" , "아직 투표 내역이 존재하지 않습니다."),
     ALREADY_AUTH(HttpStatus.CONFLICT, "AUTH409" , "이미 인증한 내역이 존재합니다."),
-    NOT_AUTH_TIME(HttpStatus.CONFLICT, "AUTH409" , "인증 가능한 시간이 아닙니다.");
+    NOT_AUTH_TIME(HttpStatus.CONFLICT, "AUTH409" , "인증 가능한 시간이 아닙니다."),
+    WRONG_DATE(HttpStatus.CONFLICT, "CHALLENGE409" , "챌린지 종료일이 시작일보다 늦을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

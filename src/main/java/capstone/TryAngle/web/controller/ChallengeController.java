@@ -133,9 +133,18 @@ public class ChallengeController {
     public ApiResponse<?> joinChallenge(@RequestBody ChallengeRequestDTO.joinChallengeDTO joinChallengeDTO,
                                         @AuthenticationPrincipal User loginUser) {
         String email = loginUser.getUsername();
-        challengeService.joinChallenge(joinChallengeDTO.getChallengeId(), joinChallengeDTO.getDeposit(), joinChallengeDTO.getInviteCode(), email);
+        challengeService.joinChallenge(joinChallengeDTO.getChallengeId(), joinChallengeDTO.getDeposit(), email);
         return ApiResponse.onSuccess(SuccessStatus.JOIN_SUCCESS, null);
     }
+
+    @PostMapping("/invite/verify")
+    public ApiResponse<?> verifyInviteCode(@RequestBody ChallengeRequestDTO.verifyInviteCodeDTO verifyInviteCodeDTO,
+                                        @AuthenticationPrincipal User loginUser) {
+        String email = loginUser.getUsername();
+        challengeService.verifyInviteCode(verifyInviteCodeDTO.getChallengeId(), verifyInviteCodeDTO.getInviteCode(),  email);
+        return ApiResponse.onSuccess(SuccessStatus.CORRECT_INVITE_CODE, null);
+    }
+
 
 
     // 챌린지 완료 & 예치금 반환 -> 스케쥴링 돌립니다
