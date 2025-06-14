@@ -54,7 +54,7 @@ public class SecurityConfig {
 //                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // 인증 없이 가능한 경우
                         .requestMatchers("/user/login", "/user/signup", "/user/checkEmail", "/user/checkNickname",
-                                "/user/findId", "user/resetPassword", "/ranking").permitAll()
+                                "/user/findId", "user/resetPassword", "/ranking", "/challenge/invite/verify").permitAll()
                         .requestMatchers(HttpMethod.GET, "/challenge/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/challenge").authenticated()

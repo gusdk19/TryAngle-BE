@@ -140,8 +140,8 @@ public class ChallengeController {
     @PostMapping("/invite/verify")
     public ApiResponse<?> verifyInviteCode(@RequestBody ChallengeRequestDTO.verifyInviteCodeDTO verifyInviteCodeDTO,
                                         @AuthenticationPrincipal User loginUser) {
-        String email = loginUser.getUsername();
-        challengeService.verifyInviteCode(verifyInviteCodeDTO.getChallengeId(), verifyInviteCodeDTO.getInviteCode(),  email);
+
+        challengeService.verifyInviteCode(verifyInviteCodeDTO.getChallengeId(), verifyInviteCodeDTO.getInviteCode());
         return ApiResponse.onSuccess(SuccessStatus.CORRECT_INVITE_CODE, null);
     }
 

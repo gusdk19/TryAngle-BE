@@ -326,9 +326,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
-    public void verifyInviteCode(Integer challengeId, String inviteCode, String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+    public void verifyInviteCode(Integer challengeId, String inviteCode) {
 
         Challenge challenge = challengeRepository.findById(challengeId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.CHALLENGE_NOT_FOUND));

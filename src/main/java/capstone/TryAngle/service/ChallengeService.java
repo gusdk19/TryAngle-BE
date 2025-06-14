@@ -36,5 +36,5 @@ public interface ChallengeService {
 
     AuthResponseDTO.AuthCalendarDTO getChallengeCalendar(String email, String ym);
 
-    void verifyInviteCode(Integer challengeId, String inviteCode, String email);
+    void verifyInviteCode(Integer challengeId, String inviteCode);
 }
