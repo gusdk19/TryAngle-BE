@@ -86,7 +86,7 @@ public class ChallengeController {
                 try (InputStream inputStream = imageFile.getInputStream()) {
                     if (inputStream.available() > 0) {
                         Files.copy(inputStream, uploadPath, StandardCopyOption.REPLACE_EXISTING);
-                        String imageUrl = "http://localhost:8080/uploads/" + fileName;
+                        String imageUrl = "http://3.39.236.188:8080/uploads/" + fileName;
                         createChallengeDTO.setChallengeThumbnail(imageUrl);
                     } else {
                         createChallengeDTO.setChallengeThumbnail(null);
@@ -117,7 +117,7 @@ public class ChallengeController {
                 Files.createDirectories(uploadPath.getParent());
                 Files.copy(imageFile.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
 
-                String imageUrl = "http://localhost:8080/uploads/" + fileName;
+                String imageUrl = "http://3.39.236.188:8080/uploads/" + fileName;
                 updateChallengeDTO.setChallengeThumbnail(imageUrl);
             } catch (IOException e) {
                 throw new RuntimeException("이미지 업로드 실패", e);
