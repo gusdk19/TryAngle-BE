@@ -24,6 +24,7 @@ public class WebConfig {
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                         .allowedHeaders("*")
                         .exposedHeaders("Authorization")
+                        .allowedOriginPatterns("*")
                         .allowCredentials(true);
             }
 
