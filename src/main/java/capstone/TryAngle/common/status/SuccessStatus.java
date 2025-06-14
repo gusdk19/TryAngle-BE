@@ -40,7 +40,8 @@ public enum SuccessStatus implements BaseCode {
 
     // 인증 관련 응답
     AUTH_CREATE_SUCCESS(HttpStatus.OK, "AUTH200", "새로운 인증이 추가되었습니다."),
-    AUTH_UPDATE_SUCCESS(HttpStatus.OK, "AUTH200", "인증 내용이 수정되었습니다.");
+    AUTH_UPDATE_SUCCESS(HttpStatus.OK, "AUTH200", "인증 내용이 수정되었습니다."),
+    CORRECT_INVITE_CODE(HttpStatus.OK, "CHALLENGE200", "초대코드 인증에 성공했습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

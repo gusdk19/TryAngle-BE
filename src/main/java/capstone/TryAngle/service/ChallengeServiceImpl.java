@@ -168,6 +168,17 @@ public class ChallengeServiceImpl implements ChallengeService {
         }
 
 
+
+        // 최소 예치금 조건
+        if (deposit < createChallengeDTO.getMinDeposit()) {
+            throw new GeneralException(ErrorStatus.DEPOSIT_TOO_SMALL);
+        }
+
+        if (createChallengeDTO.getStartDate().isAfter(createChallengeDTO.getEndDate())){
+            throw new GeneralException(ErrorStatus.WRONG_DATE);
+        }
+
+
         Challenge challenge = new Challenge(
                 null,
                 Category.values()[createChallengeDTO.getCategory()],
@@ -196,10 +207,6 @@ public class ChallengeServiceImpl implements ChallengeService {
 
         challengeRepository.save(challenge);
 
-        // 최소 예치금 조건
-        if (deposit < createChallengeDTO.getMinDeposit()) {
-            throw new GeneralException(ErrorStatus.DEPOSIT_TOO_SMALL);
-        }
 
         // 참여 객체 생성
         Participation participation = new Participation(
@@ -255,7 +262,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
-    public void joinChallenge(Integer challengeId, Integer deposit, String inviteCode, String email) {
+    public void joinChallenge(Integer challengeId, Integer deposit,  String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
 
@@ -266,12 +273,12 @@ public class ChallengeServiceImpl implements ChallengeService {
             throw new GeneralException(ErrorStatus.JOIN_TOO_LATE);
         }
 
-        // 비공개 챌린지라면 초대 코드
-        if (!challenge.getChallengePublic()) {
-            if (inviteCode == null || !inviteCode.equals(challenge.getInviteCode())) {
-                throw new GeneralException(ErrorStatus.INVALID_INVITE_CODE);
-            }
-        }
+//        // 비공개 챌린지라면 초대 코드
+//        if (!challenge.getChallengePublic()) {
+//            if (inviteCode == null || !inviteCode.equals(challenge.getInviteCode())) {
+//                throw new GeneralException(ErrorStatus.INVALID_INVITE_CODE);
+//            }
+//        }
 
         // 중복 참여 방지
         boolean alreadyJoined = participationRepository.existsByUserUserIdAndChallengeChallengeId(
@@ -317,6 +324,22 @@ public class ChallengeServiceImpl implements ChallengeService {
         Integer currentChallengeMoney  = user.getChallengeMoney();
         user.updateChallengeMoney(currentChallengeMoney+deposit);
     }
+
+    @Override
+    public void verifyInviteCode(Integer challengeId, String inviteCode, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.USER_NOT_FOUND));
+
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.CHALLENGE_NOT_FOUND));
+
+        if (!challenge.getChallengePublic()) {
+            if (inviteCode == null || !inviteCode.equals(challenge.getInviteCode())) {
+                throw new GeneralException(ErrorStatus.INVALID_INVITE_CODE);
+            }
+        }
+    }
+
 
     @Scheduled(cron = "0 0 0 * * *") // 매일 자정
     public void autoUpdateChallengeStatus() {
