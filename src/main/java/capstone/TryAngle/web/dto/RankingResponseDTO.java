@@ -10,4 +10,6 @@ public class RankingResponseDTO {
     private String nickname;
     private double successRate;
     private Integer challengeCount;
+    private String profileImage;
+    private String description;
 }

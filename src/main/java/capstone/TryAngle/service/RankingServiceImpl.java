@@ -60,7 +60,9 @@ public class RankingServiceImpl implements RankingService {
                     user.getUserId(),
                     user.getNickname(),
                     rate,
-                    userParticipations.size()
+                    userParticipations.size(),
+                    user.getProfileImage(),
+                    user.getDescription()
             ));
         }
 
